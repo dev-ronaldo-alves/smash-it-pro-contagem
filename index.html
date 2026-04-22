@@ -26,7 +26,6 @@
             color: #f1f5f9;
         }
 
-        /* scroll suave */
         html {
             scroll-behavior: smooth;
         }
@@ -37,7 +36,6 @@
             text-shadow: 0 2px 0 rgba(0,0,0,0.3);
         }
 
-        /* glassmorphismo premium */
         .card-glass {
             background: rgba(15, 15, 20, 0.7);
             backdrop-filter: blur(12px);
@@ -63,7 +61,6 @@
             box-shadow: 0 4px 12px -4px rgba(250, 204, 21, 0.4);
         }
 
-        /* modal animado */
         .modal {
             display: none;
             position: fixed;
@@ -95,7 +92,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* remove setas do input number */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -105,7 +101,6 @@
             -moz-appearance: textfield;
         }
 
-        /* botão edição activo */
         .edit-active {
             background: #facc15 !important;
             color: black !important;
@@ -113,10 +108,6 @@
             box-shadow: 0 0 0 2px rgba(250,204,21,0.3);
         }
 
-        /* botão ação especial */
-        .action-btn-icon {
-            transition: all 0.2s ease;
-        }
         .action-btn-icon:active {
             transform: scale(0.92);
         }
@@ -124,7 +115,6 @@
 </head>
 <body class="min-h-screen pb-44 antialiased">
 
-    <!-- HEADER FIXO + SEARCH + NOVOS BOTÕES DE AÇÃO -->
     <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg">
         <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
             <div class="flex justify-between items-center mb-4">
@@ -133,24 +123,17 @@
                     <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
                 </div>
                 <div class="flex gap-3">
-                    <!-- Botão Modo Edição -->
                     <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
                         <i class="fas fa-cog text-base"></i>
                     </button>
-                    
-                    <!-- Botão LIMPAR ITENS MARCADOS (zera todas as quantidades) -->
                     <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
                         <i class="fas fa-eraser text-base"></i>
                     </button>
-                    
-                    <!-- Botão REDEFINIÇÃO GERAL (configurações originais) -->
                     <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all" title="Redefinir tudo - categorias originais">
                         <i class="fas fa-arrow-rotate-left text-base"></i>
                     </button>
                 </div>
             </div>
-            
-            <!-- Barra de pesquisa -->
             <div class="relative mt-1">
                 <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
                 <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." 
@@ -159,10 +142,7 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
     <main class="max-w-xl mx-auto px-4 py-5 space-y-8">
-        
-        <!-- Painel de gestão (edição) -->
         <div id="management-zone" class="hidden animate-in bg-yellow-500/5 border border-yellow-500/25 rounded-3xl p-5 backdrop-blur-sm">
             <div class="flex items-center gap-2 mb-3">
                 <i class="fas fa-screwdriver-wrench text-yellow-400 text-sm"></i>
@@ -174,10 +154,8 @@
             <p class="text-[10px] text-gray-400 text-center mt-3">✦ Toque nos itens para editar ou adicionar</p>
         </div>
 
-        <!-- Inventário dinâmico -->
         <div id="inventory-container" class="space-y-8"></div>
 
-        <!-- Bloco de notas premium -->
         <div class="card-glass rounded-3xl p-5 mt-4">
             <div class="flex items-center gap-3 mb-3 px-1">
                 <div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center">
@@ -189,7 +167,6 @@
         </div>
     </main>
 
-    <!-- BOTÃO FLUTUANTE WHATSAPP -->
     <div class="fixed bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black via-black/95 to-transparent z-40">
         <div class="max-w-xl mx-auto">
             <button onclick="sendToWhatsApp()" class="w-full btn-smash font-bold h-16 rounded-2xl text-sm uppercase tracking-[0.15em] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-500/20 active:scale-[0.98] transition-all">
@@ -199,7 +176,6 @@
         </div>
     </div>
 
-    <!-- MODAL UNIVERSAL -->
     <div id="modal-container" class="modal px-5">
         <div class="card-glass p-6 rounded-[2.5rem] w-full max-w-sm border border-yellow-500/30 shadow-2xl animate-in">
             <div class="text-center mb-2">
@@ -216,32 +192,31 @@
 
     <script>
         // --------------------------------------------------------------
-        // DADOS INICIAIS (default original) - Usado para reset geral
+        // DADOS INICIAIS (default original)
         // --------------------------------------------------------------
         const DEFAULT_CATEGORIES = [
-            { id: 101, name: "🍔 Pães Artesanais", items: ["Pão Batata", "Pão Pimenta", "Esmagadinho", "Outros"] },
-            { id: 102, name: "🥩 Proteínas Smash", items: ["Carne 100g Caixa", "Blend de Queijos", "Frango Empanado", "Bacon Pacote"] },
+            { id: 101, name: "🍔 Pães Artesanais", items: ["Pão Batata", "Pão Pimenta", "Pão Esmagadinho", "Outros"] },
+            { id: 102, name: "🥩 Proteínas Smash", items: ["Carne 100g Caixa", "Carne Pacote", "Blend de Queijos", "Frango Empanado", "Bacon Pacote", "Presunto Pacote", "Ovos Bandeja"] },
             { id: 103, name: "🥬 Frescos & Veg", items: ["Alface", "Tomate Unidade", "Cebola Caramelizada", "Picles Caseiros", "Veggie", "Futuro"] },
-            { id: 104, name: "🧀 Queijos e Molhos", items: ["Cheddar Barra", "Prato Barra", "Molho Gravy", "Molho Heinzen", "Molho de Pimenta", "Maionese da Casa"] }
+            { id: 104, name: "🧀 Queijos e Molhos", items: ["Cheddar Barra", "Cheddar Caixa", "Prato Barra", "Prato Caixa", "Mussarela Pacote", "Mussarela Barra", "Molho Gravy", "Molho Heinzen", "Molho de Pimenta", "Maionese da Casa"] },
+            { id: 105, name: "🍟 Acompanhamentos", items: ["Batata Palito Porção", "Batata Palito Pacote", "Batata Canoa Porção", "Batata Canoa Pacote", "Batata Doce Chips Porção", "Batata Doce Chips Caixa"] },
+            { id: 106, name: "🧂 Temperos & Extras", items: ["Manteiga Tablets", "Manteiga Barra", "Óleo Frasco", "Óleo Balde", "Sal 1kg", "Pimenta", "Alho", "Cebolinha", "Salsa"] }
         ];
 
-        // Carrega ou inicializa storage
         let inventory = JSON.parse(localStorage.getItem('smash_inventory_pro'));
         if (!inventory || inventory.length === 0) {
-            inventory = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)); // clone profundo
+            inventory = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
             localStorage.setItem('smash_inventory_pro', JSON.stringify(inventory));
         }
 
         let counts = JSON.parse(localStorage.getItem('smash_counts_pro')) || {};
         let isEditMode = false;
 
-        // Helper: salvar tudo
         function persistData() {
             localStorage.setItem('smash_inventory_pro', JSON.stringify(inventory));
             localStorage.setItem('smash_counts_pro', JSON.stringify(counts));
         }
 
-        // Notas
         function saveNotes() {
             const notes = document.getElementById('notes').value;
             localStorage.setItem('smash_notes_pro', notes);
@@ -251,12 +226,10 @@
             if (savedNote !== null) document.getElementById('notes').value = savedNote;
         }
 
-        // Alternar modo edição (UI + render)
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('btn-edit-mode');
             const mgmtZone = document.getElementById('management-zone');
-            
             if(isEditMode) {
                 editBtn.classList.add('edit-active');
                 mgmtZone.classList.remove('hidden');
@@ -267,7 +240,6 @@
             render();
         }
 
-        // Renderização principal com filtro e quantidades
         function render() {
             const container = document.getElementById('inventory-container');
             if (!container) return;
@@ -275,23 +247,16 @@
             container.innerHTML = '';
 
             inventory.forEach(category => {
-                // Filtra itens baseado no search (nome da categoria ou nome do item)
                 let filteredItems = category.items.filter(item => 
                     item.toLowerCase().includes(searchTerm) || category.name.toLowerCase().includes(searchTerm)
                 );
-                
-                // Se a categoria tiver correspondência apenas pelo nome mas nenhum item específico, mostramos todos
                 if (category.name.toLowerCase().includes(searchTerm) && filteredItems.length === 0) {
                     filteredItems = [...category.items];
                 }
-                
                 if (filteredItems.length === 0) return;
 
-                // Montar HTML da categoria
                 const catDiv = document.createElement('div');
                 catDiv.className = 'animate-in space-y-3';
-                
-                // Header da categoria
                 let headerHtml = `
                     <div class="flex justify-between items-end px-1 pb-1">
                         <div class="flex items-center gap-2">
@@ -309,8 +274,6 @@
                     `;
                 }
                 headerHtml += `</div>`;
-                
-                // Lista de itens
                 let itemsHtml = `<div class="grid gap-2.5">`;
                 filteredItems.forEach(item => {
                     const key = `${category.id}-${item}`;
@@ -346,13 +309,11 @@
                 container.appendChild(catDiv);
             });
             
-            // Se não houver nenhuma categoria após filtro
             if (container.children.length === 0) {
                 container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item encontrado.<br>🔍 Tente outro termo ou adicione categorias.</p></div>`;
             }
         }
 
-        // Utilitário anti-XSS
         function escapeHtml(str) {
             if (!str) return '';
             return str.replace(/[&<>]/g, function(m) {
@@ -365,7 +326,6 @@
             });
         }
 
-        // Manipulação de contagem
         function updateCount(key, delta) {
             const current = counts[key] || 0;
             const newVal = Math.max(0, current + delta);
@@ -384,12 +344,9 @@
             if (inputEl) inputEl.value = counts[key];
         }
 
-        // ==============================================================
-        // NOVOS BOTÕES: 1) LIMPAR ITENS MARCADOS (Zerar contagens) 
-        //               2) REDEFINIÇÃO GERAL (configurações originais)
-        // ==============================================================
-        
-        // 1) Limpar todas as quantidades (itens marcados / contagens)
+        // --------------------------------------------------------------
+        // LIMPAR TODAS QUANTIDADES (ZERAR STOCK)
+        // --------------------------------------------------------------
         function confirmClearChecked() {
             document.getElementById('modal-title').innerText = '🧹 Limpar Quantidades';
             document.getElementById('modal-content').innerHTML = `
@@ -400,7 +357,7 @@
                 </div>
             `;
             document.getElementById('modal-confirm').onclick = () => {
-                counts = {};   // zera todas as quantidades
+                counts = {};
                 persistData();
                 closeModal();
                 render();
@@ -408,7 +365,9 @@
             openModal();
         }
         
-        // 2) Redefinição geral: restaura categorias e itens originais, zera contagens e notas
+        // --------------------------------------------------------------
+        // RESET GERAL (configurações originais)
+        // --------------------------------------------------------------
         function confirmFullReset() {
             document.getElementById('modal-title').innerText = '⚠️ RESET COMPLETO';
             document.getElementById('modal-content').innerHTML = `
@@ -425,23 +384,21 @@
                 </div>
             `;
             document.getElementById('modal-confirm').onclick = () => {
-                // Reset completo: categorias originais (clone profundo)
                 inventory = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                counts = {};   // todas as contagens zeradas
-                // Limpar notas também
+                counts = {};
                 const notesTextarea = document.getElementById('notes');
                 if (notesTextarea) notesTextarea.value = '';
                 localStorage.setItem('smash_notes_pro', '');
-                // Persistir novo estado
                 persistData();
-                // Caso o modo edição esteja ativo, permanece, mas render atualiza
                 render();
                 closeModal();
             };
             openModal();
         }
-        
-        // ---- MODAIS DINÂMICOS (CRUD) ----
+
+        // --------------------------------------------------------------
+        // MODAIS CRUD (CATEGORIAS + ITENS)
+        // --------------------------------------------------------------
         function openModal() {
             document.getElementById('modal-container').classList.add('active');
         }
@@ -449,7 +406,7 @@
             document.getElementById('modal-container').classList.remove('active');
         }
 
-        // Categoria (nova ou editar)
+        // Categoria: criar (com 3 produtos fictícios) ou editar
         function openCategoryModal(catId = null) {
             const category = catId ? inventory.find(c => c.id === catId) : null;
             document.getElementById('modal-title').innerText = catId ? '✏️ Editar Categoria' : '➕ Nova Categoria';
@@ -466,10 +423,17 @@
                 const newName = document.getElementById('modal-input').value.trim();
                 if (!newName) return;
                 if (catId) {
+                    // Editar categoria existente (mantém os itens atuais)
                     category.name = newName;
                 } else {
+                    // CRIAR NOVA CATEGORIA: de acordo com o requisito, adicionar 3 produtos fictícios "Produto 1", "Produto 2", "Produto 3"
                     const newId = Date.now();
-                    inventory.push({ id: newId, name: newName, items: [] });
+                    const dummyProducts = ["Produto 1", "Produto 2", "Produto 3"];
+                    inventory.push({ 
+                        id: newId, 
+                        name: newName, 
+                        items: [...dummyProducts]   // exatamente os 3 produtos que o operador poderá alterar
+                    });
                 }
                 persistData();
                 closeModal();
@@ -478,7 +442,7 @@
             openModal();
         }
 
-        // Item: adicionar ou renomear
+        // Adicionar ou renomear item (suporta também renomeação dos produtos fictícios)
         function openItemModal(catId, oldItemName = null) {
             const category = inventory.find(c => c.id === catId);
             if (!category) return;
@@ -518,7 +482,6 @@
             openModal();
         }
 
-        // Deletar categoria
         function confirmDeleteCategory(catId) {
             const cat = inventory.find(c => c.id === catId);
             if (!cat) return;
@@ -530,7 +493,6 @@
                 </div>
             `;
             document.getElementById('modal-confirm').onclick = () => {
-                // apagar contagens relacionadas
                 cat.items.forEach(item => {
                     delete counts[`${cat.id}-${item}`];
                 });
@@ -563,7 +525,9 @@
             openModal();
         }
 
-        // Envio para WhatsApp
+        // --------------------------------------------------------------
+        // WHATSAPP REPORT
+        // --------------------------------------------------------------
         function sendToWhatsApp() {
             const notes = document.getElementById('notes').value;
             const now = new Date();
@@ -602,11 +566,10 @@
             window.open(waUrl, '_blank');
         }
 
-        // Inicialização e eventos
+        // Inicialização
         window.onload = () => {
             loadNotes();
             render();
-            // Garantir que se inventory foi atualizado externamente, renderize
             window.addEventListener('storage', (e) => {
                 if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
                     inventory = JSON.parse(localStorage.getItem('smash_inventory_pro')) || JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
