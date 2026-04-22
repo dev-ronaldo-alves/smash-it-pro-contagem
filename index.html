@@ -5,573 +5,376 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <link rel="icon" type="image/svg+xml" href="https://emojicdn.elk.sh/🍔">
     <title>Smash It - Pro Contagem | Gestão de Stock</title>
-    <!-- Tailwind + Font Awesome + Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800&display=swap');
         
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --smash-yellow: #facc15;
-            --smash-dark: #050505;
-            --card-border: rgba(255, 255, 255, 0.06);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #0b0b0b, #000000);
-            color: #f1f5f9;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .brand-font {
-            font-family: 'Bangers', cursive;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 0 rgba(0,0,0,0.3);
-        }
-
-        .card-glass {
-            background: rgba(15, 15, 20, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        .card-glass:hover {
-            border-color: rgba(250, 204, 21, 0.2);
-            background: rgba(20, 20, 28, 0.8);
-        }
-
-        .btn-smash {
-            background: linear-gradient(105deg, #facc15 0%, #eab308 100%);
-            color: #0c0a2a;
-            font-weight: 800;
-            transition: transform 0.15s ease, box-shadow 0.2s;
-            box-shadow: 0 8px 20px -6px rgba(250, 204, 21, 0.2);
-        }
-
-        .btn-smash:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 12px -4px rgba(250, 204, 21, 0.4);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: modalFade 0.25s ease-out;
-        }
-
-        @keyframes modalFade {
-            from { opacity: 0; backdrop-filter: blur(0px);}
-            to { opacity: 1; backdrop-filter: blur(10px);}
-        }
-
-        .animate-in {
-            animation: slideUp 0.3s ease-out forwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-        .edit-active {
-            background: #facc15 !important;
-            color: black !important;
-            transform: rotate(90deg);
-            box-shadow: 0 0 0 2px rgba(250,204,21,0.3);
-        }
-
-        .action-btn-icon:active {
-            transform: scale(0.92);
-        }
+        * { -webkit-tap-highlight-color: transparent; }
+        :root { --smash-yellow: #facc15; --smash-dark: #050505; --card-border: rgba(255, 255, 255, 0.06); }
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at 10% 20%, #0b0b0b, #000000); color: #f1f5f9; }
+        html { scroll-behavior: smooth; }
+        .brand-font { font-family: 'Bangers', cursive; letter-spacing: 2px; text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+        .card-glass { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(12px); border: 1px solid var(--card-border); transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+        .card-glass:hover { border-color: rgba(250, 204, 21, 0.2); background: rgba(20, 20, 28, 0.8); }
+        .btn-smash { background: linear-gradient(105deg, #facc15 0%, #eab308 100%); color: #0c0a2a; font-weight: 800; transition: transform 0.15s ease, box-shadow 0.2s; box-shadow: 0 8px 20px -6px rgba(250, 204, 21, 0.2); }
+        .btn-smash:active { transform: scale(0.97); box-shadow: 0 4px 12px -4px rgba(250, 204, 21, 0.4); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(10px); z-index: 200; align-items: center; justify-content: center; }
+        .modal.active { display: flex; animation: modalFade 0.25s ease-out; }
+        @keyframes modalFade { from { opacity: 0; backdrop-filter: blur(0px);} to { opacity: 1; backdrop-filter: blur(10px);} }
+        .animate-in { animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .edit-active { background: #facc15 !important; color: black !important; transform: rotate(90deg); box-shadow: 0 0 0 2px rgba(250,204,21,0.3); }
+        .eye-btn { transition: all 0.1s ease; cursor: pointer; opacity: 0.7; }
+        .eye-btn:hover { opacity: 1; transform: scale(1.05); }
+        .eye-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="min-h-screen pb-44 antialiased">
 
-    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg">
-        <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-baseline gap-2">
-                    <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
-                    <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
-                </div>
-                <div class="flex gap-3">
-                    <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
-                        <i class="fas fa-cog text-base"></i>
-                    </button>
-                    <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
-                        <i class="fas fa-eraser text-base"></i>
-                    </button>
-                    <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all" title="Redefinir tudo - categorias originais">
-                        <i class="fas fa-arrow-rotate-left text-base"></i>
-                    </button>
-                </div>
+<header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg">
+    <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-baseline gap-2">
+                <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
+                <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
             </div>
-            <div class="relative mt-1">
-                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-                <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." 
-                       class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all">
+            <div class="flex gap-3">
+                <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50"><i class="fas fa-cog text-base"></i></button>
+                <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all"><i class="fas fa-eraser text-base"></i></button>
+                <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all"><i class="fas fa-arrow-rotate-left text-base"></i></button>
             </div>
         </div>
-    </header>
-
-    <main class="max-w-xl mx-auto px-4 py-5 space-y-8">
-        <div id="management-zone" class="hidden animate-in bg-yellow-500/5 border border-yellow-500/25 rounded-3xl p-5 backdrop-blur-sm">
-            <div class="flex items-center gap-2 mb-3">
-                <i class="fas fa-screwdriver-wrench text-yellow-400 text-sm"></i>
-                <h3 class="text-yellow-400 text-[11px] font-black uppercase tracking-[0.2rem]">Modo Gestão</h3>
-            </div>
-            <button onclick="openCategoryModal()" class="w-full bg-yellow-500 text-black font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition">
-                <i class="fas fa-layer-group"></i> Criar nova categoria
-            </button>
-            <p class="text-[10px] text-gray-400 text-center mt-3">✦ Toque nos itens para editar ou adicionar</p>
-        </div>
-
-        <div id="inventory-container" class="space-y-8"></div>
-
-        <div class="card-glass rounded-3xl p-5 mt-4">
-            <div class="flex items-center gap-3 mb-3 px-1">
-                <div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center">
-                    <i class="fas fa-sticky-note text-yellow-400 text-[11px]"></i>
-                </div>
-                <label class="font-bold uppercase text-[10px] tracking-[0.2em] text-gray-400">Relatório / Observações</label>
-            </div>
-            <textarea id="notes" rows="3" oninput="saveNotes()" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-yellow-500/60 outline-none text-white/90 text-sm resize-none placeholder:text-gray-500" placeholder="📝 Ex: Urgente reabastecer pães, promoção smash duplo..."></textarea>
-        </div>
-    </main>
-
-    <div class="fixed bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black via-black/95 to-transparent z-40">
-        <div class="max-w-xl mx-auto">
-            <button onclick="sendToWhatsApp()" class="w-full btn-smash font-bold h-16 rounded-2xl text-sm uppercase tracking-[0.15em] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-500/20 active:scale-[0.98] transition-all">
-                <i class="fab fa-whatsapp text-2xl"></i>
-                GERAR RELATÓRIO & ENVIAR
-            </button>
+        <div class="relative mt-1">
+            <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+            <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all">
         </div>
     </div>
+</header>
 
-    <div id="modal-container" class="modal px-5">
-        <div class="card-glass p-6 rounded-[2.5rem] w-full max-w-sm border border-yellow-500/30 shadow-2xl animate-in">
-            <div class="text-center mb-2">
-                <h3 id="modal-title" class="text-2xl font-black text-yellow-500 brand-font uppercase tracking-wide">Ação</h3>
-                <div class="w-12 h-0.5 bg-yellow-500/50 mx-auto mt-1 rounded-full"></div>
-            </div>
-            <div id="modal-content" class="space-y-5 my-4"></div>
-            <div class="flex gap-3 mt-4">
-                <button onclick="closeModal()" class="flex-1 h-12 bg-white/10 rounded-xl font-bold text-gray-300 text-xs uppercase tracking-wider hover:bg-white/15 transition">Cancelar</button>
-                <button id="modal-confirm" class="flex-1 btn-smash h-12 rounded-xl font-bold text-xs uppercase tracking-wider shadow-md">Confirmar</button>
-            </div>
-        </div>
+<main class="max-w-xl mx-auto px-4 py-5 space-y-8">
+    <div id="management-zone" class="hidden animate-in bg-yellow-500/5 border border-yellow-500/25 rounded-3xl p-5 backdrop-blur-sm">
+        <div class="flex items-center gap-2 mb-3"><i class="fas fa-screwdriver-wrench text-yellow-400 text-sm"></i><h3 class="text-yellow-400 text-[11px] font-black uppercase tracking-[0.2rem]">Modo Gestão</h3></div>
+        <button onclick="openCategoryModal()" class="w-full bg-yellow-500 text-black font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition"><i class="fas fa-layer-group"></i> Criar nova categoria</button>
+        <p class="text-[10px] text-gray-400 text-center mt-3">✦ Toque nos itens para editar ou adicionar</p>
     </div>
 
-    <script>
-        // --------------------------------------------------------------
-        // DADOS INICIAIS (default original)
-        // --------------------------------------------------------------
-        const DEFAULT_CATEGORIES = [
-            { id: 101, name: "🍔 Pães Artesanais", items: ["Pão Batata", "Pão Pimenta", "Pão Esmagadinho", "Outros"] },
-            { id: 102, name: "🥩 Proteínas Smash", items: ["Carne 100g Caixa", "Carne Pacote", "Blend de Queijos", "Frango Empanado", "Bacon Pacote", "Presunto Pacote", "Ovos Bandeja"] },
-            { id: 103, name: "🥬 Frescos & Veg", items: ["Alface", "Tomate Unidade", "Cebola Caramelizada", "Picles Caseiros", "Veggie", "Futuro"] },
-            { id: 104, name: "🧀 Queijos e Molhos", items: ["Cheddar Barra", "Cheddar Caixa", "Prato Barra", "Prato Caixa", "Mussarela Pacote", "Mussarela Barra", "Molho Gravy", "Molho Heinzen", "Molho de Pimenta", "Maionese da Casa"] },
-            { id: 105, name: "🍟 Acompanhamentos", items: ["Batata Palito Porção", "Batata Palito Pacote", "Batata Canoa Porção", "Batata Canoa Pacote", "Batata Doce Chips Porção", "Batata Doce Chips Caixa"] },
-            { id: 106, name: "🍮 Sobremesas", items: ["Pudim Brullet", "Brownie"] },
-            { id: 107, name: "🧂 Temperos & Extras", items: ["Manteiga Tablets", "Manteiga Barra", "Óleo Frasco", "Óleo Balde", "Sal 1kg", "Pimenta", "Alho", "Cebolinha", "Salsa"] }
-        ];
+    <div id="inventory-container" class="space-y-8"></div>
 
-        let inventory = JSON.parse(localStorage.getItem('smash_inventory_pro'));
-        if (!inventory || inventory.length === 0) {
-            inventory = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-            localStorage.setItem('smash_inventory_pro', JSON.stringify(inventory));
+    <div class="card-glass rounded-3xl p-5 mt-4">
+        <div class="flex items-center gap-3 mb-3 px-1"><div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center"><i class="fas fa-sticky-note text-yellow-400 text-[11px]"></i></div><label class="font-bold uppercase text-[10px] tracking-[0.2em] text-gray-400">Relatório / Observações</label></div>
+        <textarea id="notes" rows="3" oninput="saveNotes()" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-yellow-500/60 outline-none text-white/90 text-sm resize-none placeholder:text-gray-500" placeholder="📝 Ex: Urgente reabastecer pães, promoção smash duplo..."></textarea>
+    </div>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black via-black/95 to-transparent z-40">
+    <div class="max-w-xl mx-auto">
+        <button onclick="sendToWhatsApp()" class="w-full btn-smash font-bold h-16 rounded-2xl text-sm uppercase tracking-[0.15em] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-500/20 active:scale-[0.98] transition-all"><i class="fab fa-whatsapp text-2xl"></i> GERAR RELATÓRIO & ENVIAR</button>
+    </div>
+</div>
+
+<div id="modal-container" class="modal px-5">
+    <div class="card-glass p-6 rounded-[2.5rem] w-full max-w-sm border border-yellow-500/30 shadow-2xl animate-in">
+        <div class="text-center mb-2"><h3 id="modal-title" class="text-2xl font-black text-yellow-500 brand-font uppercase tracking-wide">Ação</h3><div class="w-12 h-0.5 bg-yellow-500/50 mx-auto mt-1 rounded-full"></div></div>
+        <div id="modal-content" class="space-y-5 my-4"></div>
+        <div class="flex gap-3 mt-4"><button onclick="closeModal()" class="flex-1 h-12 bg-white/10 rounded-xl font-bold text-gray-300 text-xs uppercase tracking-wider hover:bg-white/15 transition">Cancelar</button><button id="modal-confirm" class="flex-1 btn-smash h-12 rounded-xl font-bold text-xs uppercase tracking-wider shadow-md">Confirmar</button></div>
+    </div>
+</div>
+
+<script>
+    // ---------- DADOS PADRÃO (compatível com novo formato de visibilidade) ----------
+    const DEFAULT_CATEGORIES_RAW = [
+        { id: 101, name: "🍔 Pães Artesanais", items: ["Pão Batata", "Pão Pimenta", "Pão Esmagadinho", "Outros"] },
+        { id: 102, name: "🥩 Proteínas Smash", items: ["Carne 100g Caixa", "Carne Pacote", "Blend de Queijos", "Frango Empanado", "Bacon Pacote", "Presunto Pacote", "Ovos Bandeja"] },
+        { id: 103, name: "🥬 Frescos & Veg", items: ["Alface", "Tomate Unidade", "Cebola Caramelizada", "Picles Caseiros", "Veggie", "Futuro"] },
+        { id: 104, name: "🧀 Queijos e Molhos", items: ["Cheddar Barra", "Cheddar Caixa", "Prato Barra", "Prato Caixa", "Mussarela Pacote", "Mussarela Barra", "Molho Gravy", "Molho Heinzen", "Molho de Pimenta", "Maionese da Casa"] },
+        { id: 105, name: "🍟 Acompanhamentos", items: ["Batata Palito Porção", "Batata Palito Pacote", "Batata Canoa Porção", "Batata Canoa Pacote", "Batata Doce Chips Porção", "Batata Doce Chips Caixa"] },
+        { id: 106, name: "🍮 Sobremesas", items: ["Pudim Brullet", "Brownie"] },
+        { id: 107, name: "🧂 Temperos & Extras", items: ["Manteiga Tablets", "Manteiga Barra", "Óleo Frasco", "Óleo Balde", "Sal 1kg", "Pimenta", "Alho", "Cebolinha", "Salsa"] }
+    ];
+
+    // Converte para formato com visibilidade (categoria.visible e itens como objetos {name, visible})
+    function convertToVisibilityFormat(categories) {
+        return categories.map(cat => ({
+            id: cat.id,
+            name: cat.name,
+            visible: cat.visible !== undefined ? cat.visible : true,
+            items: (cat.items || []).map(item => {
+                if (typeof item === 'string') return { name: item, visible: true };
+                return { name: item.name, visible: item.visible !== undefined ? item.visible : true };
+            })
+        }));
+    }
+
+    let inventory = [];
+    let counts = {};
+    let isEditMode = false;
+
+    // Carregar / inicializar dados
+    function loadData() {
+        let stored = localStorage.getItem('smash_inventory_pro');
+        if (stored) {
+            try {
+                let parsed = JSON.parse(stored);
+                inventory = convertToVisibilityFormat(parsed);
+            } catch(e) { inventory = convertToVisibilityFormat(DEFAULT_CATEGORIES_RAW); }
+        } else {
+            inventory = convertToVisibilityFormat(DEFAULT_CATEGORIES_RAW);
         }
+        counts = JSON.parse(localStorage.getItem('smash_counts_pro')) || {};
+    }
 
-        let counts = JSON.parse(localStorage.getItem('smash_counts_pro')) || {};
-        let isEditMode = false;
+    function persistData() {
+        localStorage.setItem('smash_inventory_pro', JSON.stringify(inventory));
+        localStorage.setItem('smash_counts_pro', JSON.stringify(counts));
+    }
 
-        function persistData() {
-            localStorage.setItem('smash_inventory_pro', JSON.stringify(inventory));
-            localStorage.setItem('smash_counts_pro', JSON.stringify(counts));
+    function saveNotes() { localStorage.setItem('smash_notes_pro', document.getElementById('notes').value); }
+    function loadNotes() { let n = localStorage.getItem('smash_notes_pro'); if(n !== null) document.getElementById('notes').value = n; }
+
+    function toggleEditMode() {
+        isEditMode = !isEditMode;
+        const btn = document.getElementById('btn-edit-mode');
+        const zone = document.getElementById('management-zone');
+        if(isEditMode) { btn.classList.add('edit-active'); zone.classList.remove('hidden'); }
+        else { btn.classList.remove('edit-active'); zone.classList.add('hidden'); }
+        render();
+    }
+
+    // Alternar visibilidade da categoria
+    function toggleCategoryVisibility(catId) {
+        const cat = inventory.find(c => c.id === catId);
+        if(cat) { cat.visible = !cat.visible; persistData(); render(); }
+    }
+
+    // Alternar visibilidade do item
+    function toggleItemVisibility(catId, itemName) {
+        const cat = inventory.find(c => c.id === catId);
+        if(cat) {
+            const item = cat.items.find(i => i.name === itemName);
+            if(item) { item.visible = !item.visible; persistData(); render(); }
         }
+    }
 
-        function saveNotes() {
-            const notes = document.getElementById('notes').value;
-            localStorage.setItem('smash_notes_pro', notes);
-        }
-        function loadNotes() {
-            const savedNote = localStorage.getItem('smash_notes_pro');
-            if (savedNote !== null) document.getElementById('notes').value = savedNote;
-        }
+    function render() {
+        const container = document.getElementById('inventory-container');
+        if (!container) return;
+        const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
+        container.innerHTML = '';
 
-        function toggleEditMode() {
-            isEditMode = !isEditMode;
-            const editBtn = document.getElementById('btn-edit-mode');
-            const mgmtZone = document.getElementById('management-zone');
-            if(isEditMode) {
-                editBtn.classList.add('edit-active');
-                mgmtZone.classList.remove('hidden');
-            } else {
-                editBtn.classList.remove('edit-active');
-                mgmtZone.classList.add('hidden');
-            }
-            render();
-        }
+        inventory.forEach(category => {
+            // Filtro de pesquisa (nome da categoria ou nome do item)
+            let filteredItems = category.items.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) || category.name.toLowerCase().includes(searchTerm)
+            );
+            if (category.name.toLowerCase().includes(searchTerm) && filteredItems.length === 0) filteredItems = [...category.items];
+            if (filteredItems.length === 0) return;
 
-        function render() {
-            const container = document.getElementById('inventory-container');
-            if (!container) return;
-            const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
-            container.innerHTML = '';
-
-            inventory.forEach(category => {
-                let filteredItems = category.items.filter(item => 
-                    item.toLowerCase().includes(searchTerm) || category.name.toLowerCase().includes(searchTerm)
-                );
-                if (category.name.toLowerCase().includes(searchTerm) && filteredItems.length === 0) {
-                    filteredItems = [...category.items];
-                }
-                if (filteredItems.length === 0) return;
-
-                const catDiv = document.createElement('div');
-                catDiv.className = 'animate-in space-y-3';
-                let headerHtml = `
-                    <div class="flex justify-between items-end px-1 pb-1">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tag text-yellow-500/70 text-[10px]"></i>
-                            <h2 class="text-yellow-500 font-extrabold uppercase text-[11px] tracking-[0.2em]">${escapeHtml(category.name)}</h2>
-                        </div>
-                `;
-                if (isEditMode) {
-                    headerHtml += `
-                        <div class="flex gap-4 text-[9px] font-black uppercase tracking-tight">
-                            <button onclick="openItemModal(${category.id})" class="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1"><i class="fas fa-plus-circle text-[9px]"></i> Item</button>
-                            <button onclick="openCategoryModal(${category.id})" class="text-blue-400 hover:text-blue-300"><i class="fas fa-pen"></i> Editar</button>
-                            <button onclick="confirmDeleteCategory(${category.id})" class="text-red-400 hover:text-red-300"><i class="fas fa-trash-can"></i> Apagar</button>
-                        </div>
-                    `;
-                }
-                headerHtml += `</div>`;
-                let itemsHtml = `<div class="grid gap-2.5">`;
-                filteredItems.forEach(item => {
-                    const key = `${category.id}-${item}`;
-                    const quantity = counts[key] || 0;
-                    itemsHtml += `
-                        <div class="card-glass p-4 rounded-2xl flex items-center justify-between group transition-all">
-                            <div class="flex flex-col gap-0.5">
-                                <span class="font-semibold text-[15px] tracking-tight text-gray-100">${escapeHtml(item)}</span>
-                                ${isEditMode ? `
-                                    <div class="flex gap-4 mt-0.5">
-                                        <button onclick="openItemModal(${category.id}, '${escapeHtml(item)}')" class="text-[9px] font-black uppercase text-blue-400/70 hover:text-blue-400 transition">✎ Renomear</button>
-                                        <button onclick="confirmDeleteItem(${category.id}, '${escapeHtml(item)}')" class="text-[9px] font-black uppercase text-red-400/70 hover:text-red-400 transition">🗑 Remover</button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div class="flex items-center gap-3 bg-black/30 rounded-2xl p-1.5">
-                                <button onclick="updateCount('${key}', -1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-red-500/20 transition-all text-gray-300 hover:bg-white/10">
-                                    <i class="fas fa-minus text-xs"></i>
-                                </button>
-                                <input type="number" value="${quantity}" 
-                                       onchange="manualUpdate('${key}', this.value)"
-                                       class="w-12 bg-transparent text-center font-bold text-yellow-500 focus:outline-none text-xl"
-                                       id="input-${key}" inputmode="numeric">
-                                <button onclick="updateCount('${key}', 1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-green-500/20 transition-all text-gray-300 hover:bg-white/10">
-                                    <i class="fas fa-plus text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                itemsHtml += `</div>`;
-                catDiv.innerHTML = headerHtml + itemsHtml;
-                container.appendChild(catDiv);
-            });
-            
-            if (container.children.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item encontrado.<br>🔍 Tente outro termo ou adicione categorias.</p></div>`;
-            }
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-                return c;
-            });
-        }
-
-        function updateCount(key, delta) {
-            const current = counts[key] || 0;
-            const newVal = Math.max(0, current + delta);
-            counts[key] = newVal;
-            const inputEl = document.getElementById(`input-${key}`);
-            if (inputEl) inputEl.value = newVal;
-            persistData();
-        }
-
-        function manualUpdate(key, valueStr) {
-            let raw = parseInt(valueStr, 10);
-            if (isNaN(raw)) raw = 0;
-            counts[key] = Math.max(0, raw);
-            persistData();
-            const inputEl = document.getElementById(`input-${key}`);
-            if (inputEl) inputEl.value = counts[key];
-        }
-
-        // --------------------------------------------------------------
-        // LIMPAR TODAS QUANTIDADES (ZERAR STOCK)
-        // --------------------------------------------------------------
-        function confirmClearChecked() {
-            document.getElementById('modal-title').innerText = '🧹 Limpar Quantidades';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="text-center space-y-2">
-                    <i class="fas fa-broom-ball text-3xl text-amber-400"></i>
-                    <p class="text-sm font-medium">Apagar TODOS os números de stock?</p>
-                    <p class="text-[11px] text-gray-400">As contagens de todos os itens voltarão a zero.<br>Categorias e itens permanecem intactos.</p>
-                </div>
-            `;
-            document.getElementById('modal-confirm').onclick = () => {
-                counts = {};
-                persistData();
-                closeModal();
-                render();
-            };
-            openModal();
-        }
-        
-        // --------------------------------------------------------------
-        // RESET GERAL (configurações originais)
-        // --------------------------------------------------------------
-        function confirmFullReset() {
-            document.getElementById('modal-title').innerText = '⚠️ RESET COMPLETO';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="text-center space-y-3">
-                    <i class="fas fa-database text-3xl text-red-500 animate-pulse"></i>
-                    <p class="text-sm font-bold text-white">Redefinir para configurações originais?</p>
-                    <div class="bg-red-500/10 p-3 rounded-xl text-left text-[12px]">
-                        <i class="fas fa-circle-info text-red-400 mr-1"></i> Isto irá:<br>
-                        • Restaurar categorias e itens padrão<br>
-                        • Zerar TODAS as quantidades contadas<br>
-                        • Limpar notas/observações<br>
-                        • Remover categorias/itens personalizados
+            const catDiv = document.createElement('div');
+            catDiv.className = 'animate-in space-y-3';
+            // Ícone de olho ao lado do título da categoria
+            const eyeIconCat = category.visible ? 'fa-eye' : 'fa-eye-slash';
+            const eyeTitle = category.visible ? 'Visível no relatório' : 'Oculto no relatório';
+            let headerHtml = `
+                <div class="flex justify-between items-center px-1 pb-1">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-tag text-yellow-500/70 text-[10px]"></i>
+                        <h2 class="text-yellow-500 font-extrabold uppercase text-[11px] tracking-[0.2em]">${escapeHtml(category.name)}</h2>
+                        <button onclick="toggleCategoryVisibility(${category.id})" class="eye-btn text-gray-400 hover:text-yellow-400 transition ml-1" title="${eyeTitle}">
+                            <i class="fas ${eyeIconCat} text-xs"></i>
+                        </button>
                     </div>
-                </div>
             `;
-            document.getElementById('modal-confirm').onclick = () => {
-                inventory = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                counts = {};
-                const notesTextarea = document.getElementById('notes');
-                if (notesTextarea) notesTextarea.value = '';
-                localStorage.setItem('smash_notes_pro', '');
-                persistData();
-                render();
-                closeModal();
-            };
-            openModal();
-        }
-
-        // --------------------------------------------------------------
-        // MODAIS CRUD (CATEGORIAS + ITENS)
-        // --------------------------------------------------------------
-        function openModal() {
-            document.getElementById('modal-container').classList.add('active');
-        }
-        function closeModal() {
-            document.getElementById('modal-container').classList.remove('active');
-        }
-
-        // Categoria: criar (com 3 produtos fictícios) ou editar
-        function openCategoryModal(catId = null) {
-            const category = catId ? inventory.find(c => c.id === catId) : null;
-            document.getElementById('modal-title').innerText = catId ? '✏️ Editar Categoria' : '➕ Nova Categoria';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome da categoria</label>
-                    <input type="text" id="modal-input" value="${category ? escapeHtml(category.name) : ''}" 
-                           class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500 text-base"
-                           placeholder="ex: 🧂 Temperos Especiais" autocomplete="off">
-                </div>
-            `;
-            const confirmBtn = document.getElementById('modal-confirm');
-            confirmBtn.onclick = () => {
-                const newName = document.getElementById('modal-input').value.trim();
-                if (!newName) return;
-                if (catId) {
-                    // Editar categoria existente (mantém os itens atuais)
-                    category.name = newName;
-                } else {
-                    // CRIAR NOVA CATEGORIA: de acordo com o requisito, adicionar 3 produtos fictícios "Produto 1", "Produto 2", "Produto 3"
-                    const newId = Date.now();
-                    const dummyProducts = ["Produto 1", "Produto 2", "Produto 3"];
-                    inventory.push({ 
-                        id: newId, 
-                        name: newName, 
-                        items: [...dummyProducts]   // exatamente os 3 produtos que o operador poderá alterar
-                    });
-                }
-                persistData();
-                closeModal();
-                render();
-            };
-            openModal();
-        }
-
-        // Adicionar ou renomear item (suporta também renomeação dos produtos fictícios)
-        function openItemModal(catId, oldItemName = null) {
-            const category = inventory.find(c => c.id === catId);
-            if (!category) return;
-            const isEditing = (oldItemName !== null);
-            document.getElementById('modal-title').innerText = isEditing ? '✏️ Renomear Item' : '✨ Adicionar Item';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome do item</label>
-                    <input type="text" id="modal-input" value="${isEditing ? escapeHtml(oldItemName) : ''}" 
-                           class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500"
-                           placeholder="Ex: Cebola crispy" autocomplete="off">
-                </div>
-            `;
-            document.getElementById('modal-confirm').onclick = () => {
-                const newItemName = document.getElementById('modal-input').value.trim();
-                if (!newItemName) return;
-                
-                if (isEditing) {
-                    // Renomear mantendo contagem
-                    const oldKey = `${catId}-${oldItemName}`;
-                    const newKey = `${catId}-${newItemName}`;
-                    if (counts[oldKey] !== undefined) {
-                        counts[newKey] = counts[oldKey];
-                        delete counts[oldKey];
-                    }
-                    const index = category.items.indexOf(oldItemName);
-                    if (index !== -1) category.items[index] = newItemName;
-                } else {
-                    if (!category.items.includes(newItemName)) {
-                        category.items.push(newItemName);
-                    }
-                }
-                persistData();
-                closeModal();
-                render();
-            };
-            openModal();
-        }
-
-        function confirmDeleteCategory(catId) {
-            const cat = inventory.find(c => c.id === catId);
-            if (!cat) return;
-            document.getElementById('modal-title').innerText = '⚠️ Apagar Categoria';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="text-center text-sm text-gray-300 space-y-3">
-                    <i class="fas fa-trash-alt text-3xl text-red-400 opacity-70"></i>
-                    <p>Remover <strong class="text-white">${escapeHtml(cat.name)}</strong>? <br> <span class="text-red-400 text-xs">Todos os itens e contagens serão eliminados.</span></p>
-                </div>
-            `;
-            document.getElementById('modal-confirm').onclick = () => {
-                cat.items.forEach(item => {
-                    delete counts[`${cat.id}-${item}`];
-                });
-                inventory = inventory.filter(c => c.id !== catId);
-                persistData();
-                closeModal();
-                render();
-            };
-            openModal();
-        }
-
-        function confirmDeleteItem(catId, itemName) {
-            document.getElementById('modal-title').innerText = '❌ Remover Item';
-            document.getElementById('modal-content').innerHTML = `
-                <div class="text-center">
-                    <p class="text-gray-200 text-sm">Tem certeza que deseja excluir <strong class="text-yellow-400">${escapeHtml(itemName)}</strong>?</p>
-                    <p class="text-xs text-gray-500 mt-1">A contagem associada será zerada.</p>
-                </div>
-            `;
-            document.getElementById('modal-confirm').onclick = () => {
-                const category = inventory.find(c => c.id === catId);
-                if (category) {
-                    category.items = category.items.filter(i => i !== itemName);
-                    delete counts[`${catId}-${itemName}`];
-                    persistData();
-                }
-                closeModal();
-                render();
-            };
-            openModal();
-        }
-
-        // --------------------------------------------------------------
-        // WHATSAPP REPORT (MODIFICADO: permite enviar mesmo com zeros)
-        // --------------------------------------------------------------
-        function sendToWhatsApp() {
-            const notes = document.getElementById('notes').value;
-            const now = new Date();
-            const formattedDate = now.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const formattedTime = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-            
-            let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`;
-            
-            // Agora incluímos TODOS os itens de TODAS as categorias, mesmo com quantidade zero
-            inventory.forEach(cat => {
-                let catSection = `\n*${cat.name.toUpperCase()}*\n`;
-                cat.items.forEach(item => {
-                    const qty = counts[`${cat.id}-${item}`] || 0;
-                    // Mostra sempre o item com a quantidade (inclusive zero)
-                    catSection += `▸ ${item}: *${qty}* un.\n`;
-                });
-                message += catSection + `\n`;
-            });
-
-            // Adiciona as notas do operador, se existirem
-            if (notes.trim().length > 0) {
-                message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
+            if (isEditMode) {
+                headerHtml += `
+                    <div class="flex gap-3 text-[9px] font-black uppercase tracking-tight">
+                        <button onclick="openItemModal(${category.id})" class="text-emerald-400 hover:text-emerald-300 transition"><i class="fas fa-plus-circle"></i> Item</button>
+                        <button onclick="openCategoryModal(${category.id})" class="text-blue-400 hover:text-blue-300"><i class="fas fa-pen"></i></button>
+                        <button onclick="confirmDeleteCategory(${category.id})" class="text-red-400 hover:text-red-300"><i class="fas fa-trash-can"></i></button>
+                    </div>
+                `;
             }
-            message += `\n🔁 Relatório gerado via Smash Contagem`;
-
-            const encoded = encodeURIComponent(message);
-            const waUrl = `https://wa.me/?text=${encoded}`;
-            window.open(waUrl, '_blank');
-        }
-
-        // Inicialização
-        window.onload = () => {
-            loadNotes();
-            render();
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
-                    inventory = JSON.parse(localStorage.getItem('smash_inventory_pro')) || JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                    counts = JSON.parse(localStorage.getItem('smash_counts_pro')) || {};
-                    render();
-                }
+            headerHtml += `</div>`;
+            let itemsHtml = `<div class="grid gap-2.5">`;
+            filteredItems.forEach(item => {
+                const key = `${category.id}-${item.name}`;
+                const quantity = counts[key] || 0;
+                const itemEyeIcon = item.visible ? 'fa-eye' : 'fa-eye-slash';
+                const itemEyeTitle = item.visible ? 'Visível no relatório' : 'Oculto no relatório';
+                itemsHtml += `
+                    <div class="card-glass p-4 rounded-2xl flex items-center justify-between group transition-all">
+                        <div class="flex flex-col gap-0.5 flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-[15px] tracking-tight text-gray-100">${escapeHtml(item.name)}</span>
+                                <button onclick="toggleItemVisibility(${category.id}, '${escapeHtml(item.name)}')" class="eye-btn text-gray-400 hover:text-yellow-400 transition" title="${itemEyeTitle}">
+                                    <i class="fas ${itemEyeIcon} text-[11px]"></i>
+                                </button>
+                            </div>
+                            ${isEditMode ? `
+                                <div class="flex gap-4 mt-0.5">
+                                    <button onclick="openItemModal(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black uppercase text-blue-400/70 hover:text-blue-400 transition">✎ Renomear</button>
+                                    <button onclick="confirmDeleteItem(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black uppercase text-red-400/70 hover:text-red-400 transition">🗑 Remover</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="flex items-center gap-3 bg-black/30 rounded-2xl p-1.5">
+                            <button onclick="updateCount('${key}', -1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-red-500/20 transition-all text-gray-300"><i class="fas fa-minus text-xs"></i></button>
+                            <input type="number" value="${quantity}" onchange="manualUpdate('${key}', this.value)" class="w-12 bg-transparent text-center font-bold text-yellow-500 focus:outline-none text-xl" id="input-${key}" inputmode="numeric">
+                            <button onclick="updateCount('${key}', 1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-green-500/20 transition-all text-gray-300"><i class="fas fa-plus text-xs"></i></button>
+                        </div>
+                    </div>
+                `;
             });
+            itemsHtml += `</div>`;
+            catDiv.innerHTML = headerHtml + itemsHtml;
+            container.appendChild(catDiv);
+        });
+
+        if (container.children.length === 0) {
+            container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item encontrado.<br>🔍 Tente outro termo ou adicione categorias.</p></div>`;
+        }
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;').replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, c=>c); }
+
+    function updateCount(key, delta) { let cur = counts[key]||0; let nv = Math.max(0, cur+delta); counts[key]=nv; let inp = document.getElementById(`input-${key}`); if(inp) inp.value=nv; persistData(); }
+    function manualUpdate(key, valStr) { let raw = parseInt(valStr,10); if(isNaN(raw)) raw=0; counts[key]=Math.max(0,raw); persistData(); let inp = document.getElementById(`input-${key}`); if(inp) inp.value=counts[key]; }
+
+    function confirmClearChecked() {
+        document.getElementById('modal-title').innerText = '🧹 Limpar Quantidades';
+        document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-2"><i class="fas fa-broom-ball text-3xl text-amber-400"></i><p class="text-sm font-medium">Apagar TODOS os números de stock?</p><p class="text-[11px] text-gray-400">As contagens de todos os itens voltarão a zero.<br>Categorias e itens permanecem intactos.</p></div>`;
+        document.getElementById('modal-confirm').onclick = () => { counts = {}; persistData(); closeModal(); render(); };
+        openModal();
+    }
+
+    function confirmFullReset() {
+        document.getElementById('modal-title').innerText = '⚠️ RESET COMPLETO';
+        document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-3"><i class="fas fa-database text-3xl text-red-500 animate-pulse"></i><p class="text-sm font-bold text-white">Redefinir para configurações originais?</p><div class="bg-red-500/10 p-3 rounded-xl text-left text-[12px]"><i class="fas fa-circle-info text-red-400 mr-1"></i> Isto irá:<br>• Restaurar categorias e itens padrão<br>• Zerar TODAS as quantidades contadas<br>• Limpar notas/observações<br>• Remover categorias/itens personalizados</div></div>`;
+        document.getElementById('modal-confirm').onclick = () => {
+            inventory = convertToVisibilityFormat(DEFAULT_CATEGORIES_RAW);
+            counts = {};
+            document.getElementById('notes').value = '';
+            localStorage.setItem('smash_notes_pro', '');
+            persistData();
+            render();
+            closeModal();
         };
-    </script>
+        openModal();
+    }
+
+    function openModal() { document.getElementById('modal-container').classList.add('active'); }
+    function closeModal() { document.getElementById('modal-container').classList.remove('active'); }
+
+    function openCategoryModal(catId = null) {
+        const category = catId ? inventory.find(c => c.id === catId) : null;
+        document.getElementById('modal-title').innerText = catId ? '✏️ Editar Categoria' : '➕ Nova Categoria';
+        document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome da categoria</label><input type="text" id="modal-input" value="${category ? escapeHtml(category.name) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500 text-base" placeholder="ex: 🧂 Temperos Especiais" autocomplete="off"></div>`;
+        document.getElementById('modal-confirm').onclick = () => {
+            let newName = document.getElementById('modal-input').value.trim();
+            if(!newName) return;
+            if(catId) {
+                category.name = newName;
+            } else {
+                let newId = Date.now();
+                inventory.push({ id: newId, name: newName, visible: true, items: [{ name: "Produto 1", visible: true }, { name: "Produto 2", visible: true }, { name: "Produto 3", visible: true }] });
+            }
+            persistData(); closeModal(); render();
+        };
+        openModal();
+    }
+
+    function openItemModal(catId, oldItemName = null) {
+        const category = inventory.find(c => c.id === catId);
+        if(!category) return;
+        const isEditing = (oldItemName !== null);
+        document.getElementById('modal-title').innerText = isEditing ? '✏️ Renomear Item' : '✨ Adicionar Item';
+        document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome do item</label><input type="text" id="modal-input" value="${isEditing ? escapeHtml(oldItemName) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500" placeholder="Ex: Cebola crispy" autocomplete="off"></div>`;
+        document.getElementById('modal-confirm').onclick = () => {
+            let newName = document.getElementById('modal-input').value.trim();
+            if(!newName) return;
+            if(isEditing) {
+                const oldKey = `${catId}-${oldItemName}`;
+                const newKey = `${catId}-${newName}`;
+                if(counts[oldKey] !== undefined) { counts[newKey] = counts[oldKey]; delete counts[oldKey]; }
+                const itemObj = category.items.find(i => i.name === oldItemName);
+                if(itemObj) itemObj.name = newName;
+            } else {
+                if(!category.items.some(i => i.name === newName)) category.items.push({ name: newName, visible: true });
+            }
+            persistData(); closeModal(); render();
+        };
+        openModal();
+    }
+
+    function confirmDeleteCategory(catId) {
+        const cat = inventory.find(c => c.id === catId);
+        if(!cat) return;
+        document.getElementById('modal-title').innerText = '⚠️ Apagar Categoria';
+        document.getElementById('modal-content').innerHTML = `<div class="text-center text-sm text-gray-300 space-y-3"><i class="fas fa-trash-alt text-3xl text-red-400 opacity-70"></i><p>Remover <strong class="text-white">${escapeHtml(cat.name)}</strong>? <br> <span class="text-red-400 text-xs">Todos os itens e contagens serão eliminados.</span></p></div>`;
+        document.getElementById('modal-confirm').onclick = () => {
+            cat.items.forEach(item => delete counts[`${cat.id}-${item.name}`]);
+            inventory = inventory.filter(c => c.id !== catId);
+            persistData(); closeModal(); render();
+        };
+        openModal();
+    }
+
+    function confirmDeleteItem(catId, itemName) {
+        document.getElementById('modal-title').innerText = '❌ Remover Item';
+        document.getElementById('modal-content').innerHTML = `<div class="text-center"><p class="text-gray-200 text-sm">Tem certeza que deseja excluir <strong class="text-yellow-400">${escapeHtml(itemName)}</strong>?</p><p class="text-xs text-gray-500 mt-1">A contagem associada será zerada.</p></div>`;
+        document.getElementById('modal-confirm').onclick = () => {
+            const category = inventory.find(c => c.id === catId);
+            if(category) {
+                category.items = category.items.filter(i => i.name !== itemName);
+                delete counts[`${catId}-${itemName}`];
+                persistData();
+            }
+            closeModal(); render();
+        };
+        openModal();
+    }
+
+    // RELATÓRIO WHATSAPP: apenas categorias visíveis e itens visíveis
+    function sendToWhatsApp() {
+        const notes = document.getElementById('notes').value;
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('pt-PT', { day:'2-digit', month:'2-digit', year:'numeric' });
+        const formattedTime = now.toLocaleTimeString('pt-PT', { hour:'2-digit', minute:'2-digit' });
+        let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`;
+        
+        inventory.forEach(cat => {
+            if (!cat.visible) return; // categoria oculta não entra no relatório
+            let catSection = `\n*${cat.name.toUpperCase()}*\n`;
+            let hasVisibleItem = false;
+            cat.items.forEach(item => {
+                if (!item.visible) return; // item oculto não entra
+                const qty = counts[`${cat.id}-${item.name}`] || 0;
+                catSection += `▸ ${item.name}: *${qty}* un.\n`;
+                hasVisibleItem = true;
+            });
+            if (hasVisibleItem) message += catSection + `\n`;
+        });
+        
+        if (notes.trim().length > 0) message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
+        message += `\n🔁 Relatório gerado via Smash Contagem`;
+        const encoded = encodeURIComponent(message);
+        window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    }
+
+    // Inicialização
+    loadData();
+    window.onload = () => {
+        loadNotes();
+        render();
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
+                loadData();
+                render();
+            }
+        });
+    };
+</script>
 </body>
 </html>
