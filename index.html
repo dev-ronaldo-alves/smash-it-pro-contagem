@@ -1,3 +1,6 @@
+Aqui está o código completo com o reposicionamento dos botões de reset (limpar e reiniciar) para uma segunda linha abaixo dos botões de tema e edição, garantindo melhor adaptação a telas de celular.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-pt">
 <head>
@@ -107,13 +110,25 @@
         body.light-theme .bg-gradient-to-t { background: var(--footer-gradient); }
         body.light-theme .placeholder-gray-500::placeholder { color: #aaa; }
         body.light-theme .modal .card-glass { background: var(--card-bg); border-color: rgba(250,204,21,0.4); }
+        
+        /* Botões da segunda linha */
+        .reset-buttons-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 480px) {
+            .reset-buttons-row { gap: 0.5rem; }
+        }
     </style>
 </head>
 <body class="min-h-screen pb-44 antialiased">
 
 <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg" style="background: var(--header-bg); border-bottom-color: var(--card-border);">
     <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
-        <div class="flex justify-between items-center mb-4">
+        <!-- Primeira linha: título + botões tema e edição -->
+        <div class="flex justify-between items-center mb-2">
             <div class="flex items-baseline gap-2">
                 <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
                 <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
@@ -123,12 +138,24 @@
                 <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
                     <i id="theme-icon" class="fas fa-moon text-base"></i>
                 </button>
-                <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50"><i class="fas fa-cog text-base"></i></button>
-                <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all"><i class="fas fa-eraser text-base"></i></button>
-                <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all"><i class="fas fa-arrow-rotate-left text-base"></i></button>
+                <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
+                    <i class="fas fa-cog text-base"></i>
+                </button>
             </div>
         </div>
-        <div class="relative mt-1">
+        
+        <!-- Segunda linha: botões de limpar e reset total (alinhados à direita) -->
+        <div class="reset-buttons-row">
+            <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
+                <i class="fas fa-eraser text-base"></i>
+            </button>
+            <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all" title="Redefinir tudo - categorias originais">
+                <i class="fas fa-arrow-rotate-left text-base"></i>
+            </button>
+        </div>
+        
+        <!-- Barra de pesquisa (mantida abaixo) -->
+        <div class="relative mt-3">
             <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
             <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all" style="background: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);">
         </div>
@@ -490,3 +517,4 @@
 </script>
 </body>
 </html>
+```
