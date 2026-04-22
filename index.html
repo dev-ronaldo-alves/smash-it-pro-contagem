@@ -528,7 +528,7 @@
         }
 
         // --------------------------------------------------------------
-        // WHATSAPP REPORT
+        // WHATSAPP REPORT (MODIFICADO: permite enviar mesmo com zeros)
         // --------------------------------------------------------------
         function sendToWhatsApp() {
             const notes = document.getElementById('notes').value;
@@ -537,27 +537,19 @@
             const formattedTime = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
             
             let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`;
-            let hasStock = false;
-
+            
+            // Agora incluímos TODOS os itens de TODAS as categorias, mesmo com quantidade zero
             inventory.forEach(cat => {
                 let catSection = `\n*${cat.name.toUpperCase()}*\n`;
-                let catHas = false;
                 cat.items.forEach(item => {
                     const qty = counts[`${cat.id}-${item}`] || 0;
-                    if (qty > 0) {
-                        catSection += `▸ ${item}: *${qty}* un.\n`;
-                        catHas = true;
-                        hasStock = true;
-                    }
+                    // Mostra sempre o item com a quantidade (inclusive zero)
+                    catSection += `▸ ${item}: *${qty}* un.\n`;
                 });
-                if (catHas) message += catSection + `\n`;
+                message += catSection + `\n`;
             });
 
-            if (!hasStock) {
-                alert("⚠️ Nenhum item com quantidade > 0. Adicione números antes de gerar o relatório.");
-                return;
-            }
-
+            // Adiciona as notas do operador, se existirem
             if (notes.trim().length > 0) {
                 message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
             }
