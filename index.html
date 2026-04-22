@@ -124,13 +124,17 @@
 
 <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg" style="background: var(--header-bg); border-bottom-color: var(--card-border);">
     <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
-        <!-- Primeira linha: título + botões tema e edição -->
+        <!-- Primeira linha: título + botões tema, alternar app e edição -->
         <div class="flex justify-between items-center mb-2">
             <div class="flex items-baseline gap-2">
                 <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
                 <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
             </div>
             <div class="flex gap-3">
+                <!-- Botão para alternar para o app de Gestão de Preços -->
+                <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
+                    <i class="fas fa-arrow-right-arrow-left text-base"></i>
+                </button>
                 <!-- Botão de alternância de tema -->
                 <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
                     <i id="theme-icon" class="fas fa-moon text-base"></i>
@@ -496,7 +500,13 @@
             themeIcon.className = 'fas fa-moon text-base';
         }
     }
-    // ---------- FIM TEMA ----------
+
+    // ---------- BOTÃO PARA ALTERNAR PARA GESTÃO DE PREÇOS ----------
+    function switchToPriceManager() {
+        // Alterna diretamente para a aplicação de gestão de preços (mesma aba)
+        window.location.href = "https://dev-ronaldo-alves.github.io/smash-it-gestao-de-precos/";
+    }
+    // --------------------------------------------------------------
 
     // Inicialização
     loadData();
