@@ -11,30 +11,107 @@
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;800&display=swap');
         
         * { -webkit-tap-highlight-color: transparent; }
-        :root { --smash-yellow: #facc15; --smash-dark: #050505; --card-border: rgba(255, 255, 255, 0.06); }
-        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at 10% 20%, #0b0b0b, #000000); color: #f1f5f9; }
+        
+        /* Tema escuro (padrão) */
+        :root {
+            --smash-yellow: #facc15;
+            --bg-gradient-start: #0b0b0b;
+            --bg-gradient-end: #000000;
+            --text-primary: #f1f5f9;
+            --card-bg: rgba(15, 15, 20, 0.7);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(0, 0, 0, 0.4);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(0, 0, 0, 0.9);
+            --footer-gradient: linear-gradient(to top, black, rgba(0,0,0,0.95), transparent);
+            --modal-bg: rgba(0, 0, 0, 0.92);
+        }
+        
+        /* Tema claro */
+        body.light-theme {
+            --bg-gradient-start: #fef9e8;
+            --bg-gradient-end: #fff4e0;
+            --text-primary: #1e1b1a;
+            --card-bg: rgba(255, 248, 235, 0.85);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --input-bg: rgba(0, 0, 0, 0.05);
+            --input-border: rgba(0, 0, 0, 0.15);
+            --header-bg: rgba(255, 248, 235, 0.95);
+            --footer-gradient: linear-gradient(to top, #fff4e0, rgba(255,244,224,0.95), transparent);
+            --modal-bg: rgba(255, 248, 235, 0.98);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-primary);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        
         html { scroll-behavior: smooth; }
         .brand-font { font-family: 'Bangers', cursive; letter-spacing: 2px; text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
-        .card-glass { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(12px); border: 1px solid var(--card-border); transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
-        .card-glass:hover { border-color: rgba(250, 204, 21, 0.2); background: rgba(20, 20, 28, 0.8); }
-        .btn-smash { background: linear-gradient(105deg, #facc15 0%, #eab308 100%); color: #0c0a2a; font-weight: 800; transition: transform 0.15s ease, box-shadow 0.2s; box-shadow: 0 8px 20px -6px rgba(250, 204, 21, 0.2); }
+        
+        .card-glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .card-glass:hover { border-color: rgba(250, 204, 21, 0.4); background: var(--card-bg); }
+        
+        .btn-smash {
+            background: linear-gradient(105deg, #facc15 0%, #eab308 100%);
+            color: #0c0a2a;
+            font-weight: 800;
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            box-shadow: 0 8px 20px -6px rgba(250, 204, 21, 0.2);
+        }
         .btn-smash:active { transform: scale(0.97); box-shadow: 0 4px 12px -4px rgba(250, 204, 21, 0.4); }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(10px); z-index: 200; align-items: center; justify-content: center; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--modal-bg);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
         .modal.active { display: flex; animation: modalFade 0.25s ease-out; }
         @keyframes modalFade { from { opacity: 0; backdrop-filter: blur(0px);} to { opacity: 1; backdrop-filter: blur(10px);} }
+        
         .animate-in { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        
         .edit-active { background: #facc15 !important; color: black !important; transform: rotate(90deg); box-shadow: 0 0 0 2px rgba(250,204,21,0.3); }
         .eye-btn { transition: all 0.1s ease; cursor: pointer; opacity: 0.7; }
         .eye-btn:hover { opacity: 1; transform: scale(1.05); }
         .eye-btn:active { transform: scale(0.95); }
+        
+        /* Ajustes específicos tema claro */
+        body.light-theme .card-glass { backdrop-filter: blur(8px); }
+        body.light-theme input, body.light-theme textarea { color: #1e1b1a; }
+        body.light-theme .bg-black/30 { background: rgba(0,0,0,0.08); }
+        body.light-theme .bg-black/40 { background: rgba(0,0,0,0.05); }
+        body.light-theme .border-white/10 { border-color: rgba(0,0,0,0.1); }
+        body.light-theme .bg-white/5 { background: rgba(0,0,0,0.05); }
+        body.light-theme .text-gray-300 { color: #4a4a4a; }
+        body.light-theme .text-gray-400 { color: #6b6b6b; }
+        body.light-theme .text-gray-500 { color: #8a8a8a; }
+        body.light-theme .bg-black/90 { background: rgba(255,248,235,0.95); }
+        body.light-theme .border-b-white\/10 { border-bottom-color: rgba(0,0,0,0.1); }
+        body.light-theme .bg-gradient-to-t { background: var(--footer-gradient); }
+        body.light-theme .placeholder-gray-500::placeholder { color: #aaa; }
+        body.light-theme .modal .card-glass { background: var(--card-bg); border-color: rgba(250,204,21,0.4); }
     </style>
 </head>
 <body class="min-h-screen pb-44 antialiased">
 
-<header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg">
+<header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg" style="background: var(--header-bg); border-bottom-color: var(--card-border);">
     <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-baseline gap-2">
@@ -42,6 +119,10 @@
                 <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
             </div>
             <div class="flex gap-3">
+                <!-- Botão de alternância de tema -->
+                <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
+                    <i id="theme-icon" class="fas fa-moon text-base"></i>
+                </button>
                 <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50"><i class="fas fa-cog text-base"></i></button>
                 <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all"><i class="fas fa-eraser text-base"></i></button>
                 <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all"><i class="fas fa-arrow-rotate-left text-base"></i></button>
@@ -49,7 +130,7 @@
         </div>
         <div class="relative mt-1">
             <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-            <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all">
+            <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all" style="background: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);">
         </div>
     </div>
 </header>
@@ -65,11 +146,11 @@
 
     <div class="card-glass rounded-3xl p-5 mt-4">
         <div class="flex items-center gap-3 mb-3 px-1"><div class="w-6 h-6 rounded-full bg-yellow-500/20 flex items-center justify-center"><i class="fas fa-sticky-note text-yellow-400 text-[11px]"></i></div><label class="font-bold uppercase text-[10px] tracking-[0.2em] text-gray-400">Relatório / Observações</label></div>
-        <textarea id="notes" rows="3" oninput="saveNotes()" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-yellow-500/60 outline-none text-white/90 text-sm resize-none placeholder:text-gray-500" placeholder="📝 Ex: Urgente reabastecer pães, promoção smash duplo..."></textarea>
+        <textarea id="notes" rows="3" oninput="saveNotes()" class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 focus:border-yellow-500/60 outline-none text-white/90 text-sm resize-none placeholder:text-gray-500" style="background: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);" placeholder="📝 Ex: Urgente reabastecer pães, promoção smash duplo..."></textarea>
     </div>
 </main>
 
-<div class="fixed bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black via-black/95 to-transparent z-40">
+<div class="fixed bottom-0 left-0 w-full p-5 bg-gradient-to-t from-black via-black/95 to-transparent z-40" style="background: var(--footer-gradient);">
     <div class="max-w-xl mx-auto">
         <button onclick="sendToWhatsApp()" class="w-full btn-smash font-bold h-16 rounded-2xl text-sm uppercase tracking-[0.15em] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-500/20 active:scale-[0.98] transition-all"><i class="fab fa-whatsapp text-2xl"></i> GERAR RELATÓRIO & ENVIAR</button>
     </div>
@@ -174,7 +255,6 @@
 
             const catDiv = document.createElement('div');
             catDiv.className = 'animate-in space-y-3';
-            // Ícone de olho ao lado do título da categoria
             const eyeIconCat = category.visible ? 'fa-eye' : 'fa-eye-slash';
             const eyeTitle = category.visible ? 'Visível no relatório' : 'Oculto no relatório';
             let headerHtml = `
@@ -207,7 +287,7 @@
                     <div class="card-glass p-4 rounded-2xl flex items-center justify-between group transition-all">
                         <div class="flex flex-col gap-0.5 flex-1">
                             <div class="flex items-center gap-2">
-                                <span class="font-semibold text-[15px] tracking-tight text-gray-100">${escapeHtml(item.name)}</span>
+                                <span class="font-semibold text-[15px] tracking-tight" style="color: var(--text-primary);">${escapeHtml(item.name)}</span>
                                 <button onclick="toggleItemVisibility(${category.id}, '${escapeHtml(item.name)}')" class="eye-btn text-gray-400 hover:text-yellow-400 transition" title="${itemEyeTitle}">
                                     <i class="fas ${itemEyeIcon} text-[11px]"></i>
                                 </button>
@@ -219,7 +299,7 @@
                                 </div>
                             ` : ''}
                         </div>
-                        <div class="flex items-center gap-3 bg-black/30 rounded-2xl p-1.5">
+                        <div class="flex items-center gap-3 rounded-2xl p-1.5" style="background: var(--input-bg);">
                             <button onclick="updateCount('${key}', -1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-red-500/20 transition-all text-gray-300"><i class="fas fa-minus text-xs"></i></button>
                             <input type="number" value="${quantity}" onchange="manualUpdate('${key}', this.value)" class="w-12 bg-transparent text-center font-bold text-yellow-500 focus:outline-none text-xl" id="input-${key}" inputmode="numeric">
                             <button onclick="updateCount('${key}', 1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-green-500/20 transition-all text-gray-300"><i class="fas fa-plus text-xs"></i></button>
@@ -345,11 +425,11 @@
         let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`;
         
         inventory.forEach(cat => {
-            if (!cat.visible) return; // categoria oculta não entra no relatório
+            if (!cat.visible) return;
             let catSection = `\n*${cat.name.toUpperCase()}*\n`;
             let hasVisibleItem = false;
             cat.items.forEach(item => {
-                if (!item.visible) return; // item oculto não entra
+                if (!item.visible) return;
                 const qty = counts[`${cat.id}-${item.name}`] || 0;
                 catSection += `▸ ${item.name}: *${qty}* un.\n`;
                 hasVisibleItem = true;
@@ -363,10 +443,42 @@
         window.open(`https://wa.me/?text=${encoded}`, '_blank');
     }
 
+    // ---------- FUNÇÃO DE TEMA CLARO/ESCURO ----------
+    function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById('theme-icon');
+        const isLight = body.classList.contains('light-theme');
+        
+        if (isLight) {
+            body.classList.remove('light-theme');
+            localStorage.setItem('smash_theme', 'dark');
+            themeIcon.className = 'fas fa-moon text-base';
+        } else {
+            body.classList.add('light-theme');
+            localStorage.setItem('smash_theme', 'light');
+            themeIcon.className = 'fas fa-sun text-base';
+        }
+    }
+    
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('smash_theme');
+        const body = document.body;
+        const themeIcon = document.getElementById('theme-icon');
+        if (savedTheme === 'light') {
+            body.classList.add('light-theme');
+            themeIcon.className = 'fas fa-sun text-base';
+        } else {
+            body.classList.remove('light-theme');
+            themeIcon.className = 'fas fa-moon text-base';
+        }
+    }
+    // ---------- FIM TEMA ----------
+
     // Inicialização
     loadData();
     window.onload = () => {
         loadNotes();
+        loadTheme();
         render();
         window.addEventListener('storage', (e) => {
             if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
