@@ -108,16 +108,18 @@
         body.light-theme .placeholder-gray-500::placeholder { color: #aaa; }
         body.light-theme .modal .card-glass { background: var(--card-bg); border-color: rgba(250,204,21,0.4); }
         
-        /* Botões da segunda linha */
-        .reset-buttons-row {
+        /* Linha de botões responsiva */
+        .action-buttons-row {
             display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-            margin-top: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 0.5rem 0 0.25rem;
         }
         @media (max-width: 480px) {
-            .reset-buttons-row { gap: 0.5rem; }
+            .action-buttons-row { gap: 0.5rem; }
         }
+        
         /* estilo para itens ocultos no modal de minimizados */
         .hidden-item-row {
             display: flex;
@@ -176,46 +178,49 @@
 
 <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg" style="background: var(--header-bg); border-bottom-color: var(--card-border);">
     <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
-        <!-- Primeira linha: título + botões tema, alternar app, edição e itens minimizados -->
-        <div class="flex justify-between items-center mb-2">
+        <!-- Primeira linha: apenas título e selo pro -->
+        <div class="flex justify-between items-center mb-1">
             <div class="flex items-baseline gap-2">
                 <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
                 <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
             </div>
-            <div class="flex gap-3">
-                <!-- Botão para alternar para o app de Gestão de Preços -->
-                <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
-                    <i class="fas fa-arrow-right-arrow-left text-base"></i>
-                </button>
-                <!-- Botão de alternância de tema -->
-                <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
-                    <i id="theme-icon" class="fas fa-moon text-base"></i>
-                </button>
-                <!-- Botão para abrir calculadora -->
-                <button onclick="openCalculator()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Calculadora Popup">
-                    <i class="fas fa-calculator text-base"></i>
-                </button>
-                <!-- Botão para gestão de itens/categorias minimizados (ocultos) -->
-                <button onclick="showHiddenItemsModal()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Gerir itens minimizados (ocultos)">
-                    <i class="fas fa-eye-slash text-base"></i>
-                </button>
-                <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
-                    <i class="fas fa-cog text-base"></i>
-                </button>
-            </div>
+            <!-- Espaço vazio para equilíbrio visual -->
+            <div></div>
         </div>
         
-        <!-- Segunda linha: botões de limpar e reset total (alinhados à direita) -->
-        <div class="reset-buttons-row">
+        <!-- Segunda linha: TODOS os botões de ação (juntos, responsivos) -->
+        <div class="action-buttons-row">
+            <!-- Alternar para Gestão de Preços -->
+            <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
+                <i class="fas fa-arrow-right-arrow-left text-base"></i>
+            </button>
+            <!-- Alternância de tema -->
+            <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
+                <i id="theme-icon" class="fas fa-moon text-base"></i>
+            </button>
+            <!-- Calculadora popup -->
+            <button onclick="openCalculator()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Calculadora Popup">
+                <i class="fas fa-calculator text-base"></i>
+            </button>
+            <!-- Gerir itens minimizados (ocultos) -->
+            <button onclick="showHiddenItemsModal()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Gerir itens minimizados (ocultos)">
+                <i class="fas fa-eye-slash text-base"></i>
+            </button>
+            <!-- Modo edição -->
+            <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
+                <i class="fas fa-cog text-base"></i>
+            </button>
+            <!-- Limpar todas quantidades -->
             <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
                 <i class="fas fa-eraser text-base"></i>
             </button>
+            <!-- Reset total -->
             <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all" title="Redefinir tudo - categorias originais">
                 <i class="fas fa-arrow-rotate-left text-base"></i>
             </button>
         </div>
         
-        <!-- Barra de pesquisa (mantida abaixo) -->
+        <!-- Terceira linha: barra de pesquisa -->
         <div class="relative mt-3">
             <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
             <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all" style="background: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);">
@@ -708,7 +713,6 @@
     function calcAppend(value) {
         if (calcExpression === "0" && !isNaN(value) && value !== '.') calcExpression = value;
         else calcExpression += value;
-        // Limitar tamanho para evitar telas infinitas
         if (calcExpression.length > 30) calcExpression = calcExpression.slice(0, 30);
         updateCalcScreen();
     }
@@ -727,12 +731,9 @@
 
     function calcResult() {
         try {
-            // Substituir operadores visuais para compatibilidade com eval
             let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
-            // Validar segurança (apenas números, operadores, parênteses, ponto)
             if (!/^[\d+\-*/.()\s]+$/.test(expr)) throw new Error('Expressão inválida');
             let result = eval(expr);
-            // Arredondar para evitar decimais excessivos
             if (typeof result === 'number') result = parseFloat(result.toFixed(8));
             calcExpression = String(result);
             updateCalcScreen();
@@ -751,7 +752,6 @@
         document.getElementById('calculator-modal').classList.remove('active');
     }
 
-    // Fechar modal da calculadora ao clicar fora do conteúdo (opcional)
     document.getElementById('calculator-modal')?.addEventListener('click', function(e) {
         if (e.target === this) closeCalculator();
     });
