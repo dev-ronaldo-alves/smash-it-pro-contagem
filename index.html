@@ -46,10 +46,89 @@
             background: radial-gradient(circle at 10% 20%, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary);
             transition: background 0.2s ease, color 0.2s ease;
+            margin: 0;
+            padding: 0;
         }
         
         html { scroll-behavior: smooth; }
         .brand-font { font-family: 'Bangers', cursive; letter-spacing: 2px; text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+        
+        /* ========= PRELOADER (pré-carregamento mais lento - 3 segundos) ========= */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease-out;
+            backdrop-filter: blur(2px);
+        }
+        body.light-theme #preloader {
+            background: #fff8ec;
+        }
+        .preloader-content {
+            text-align: center;
+            padding: 2rem;
+            animation: fadeSlideUp 0.6s ease-out;
+        }
+        .burger-icon {
+            font-size: 5rem;
+            display: inline-block;
+            animation: bounceBurger 0.9s infinite alternate ease-in-out;
+            filter: drop-shadow(0 8px 12px rgba(250,204,21,0.3));
+        }
+        .preloader-title {
+            font-size: 2.8rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            letter-spacing: 3px;
+        }
+        .progress-container {
+            width: 280px;
+            max-width: 70vw;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin: 1.8rem auto 0.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #facc15, #f59e0b);
+            border-radius: 20px;
+            /* Animação mais lenta: 2.8 segundos para preencher, mas o JavaScript garante o mínimo 3s */
+            animation: fillProgress 2.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        .preloader-sub {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        @keyframes fillProgress {
+            0% { width: 0%; }
+            40% { width: 45%; }
+        70% { width: 80%; }
+            100% { width: 100%; }
+        }
+        @keyframes bounceBurger {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-12px) scale(1.05); text-shadow: 0 0 8px #facc15; }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* fim preloader */
         
         .card-glass {
             background: var(--card-bg);
@@ -92,23 +171,14 @@
         .eye-btn:hover { opacity: 1; transform: scale(1.05); }
         .eye-btn:active { transform: scale(0.95); }
         
-        /* Ajustes específicos tema claro */
+        /* Ajustes tema claro */
         body.light-theme .card-glass { backdrop-filter: blur(8px); }
-        body.light-theme input, body.light-theme textarea { color: #1e1b1a; }
         body.light-theme .bg-black/30 { background: rgba(0,0,0,0.08); }
-        body.light-theme .bg-black/40 { background: rgba(0,0,0,0.05); }
         body.light-theme .border-white/10 { border-color: rgba(0,0,0,0.1); }
-        body.light-theme .bg-white/5 { background: rgba(0,0,0,0.05); }
         body.light-theme .text-gray-300 { color: #4a4a4a; }
-        body.light-theme .text-gray-400 { color: #6b6b6b; }
-        body.light-theme .text-gray-500 { color: #8a8a8a; }
         body.light-theme .bg-black/90 { background: rgba(255,248,235,0.95); }
         body.light-theme .border-b-white\/10 { border-bottom-color: rgba(0,0,0,0.1); }
-        body.light-theme .bg-gradient-to-t { background: var(--footer-gradient); }
-        body.light-theme .placeholder-gray-500::placeholder { color: #aaa; }
-        body.light-theme .modal .card-glass { background: var(--card-bg); border-color: rgba(250,204,21,0.4); }
         
-        /* Linha de botões responsiva */
         .action-buttons-row {
             display: flex;
             flex-wrap: wrap;
@@ -120,7 +190,6 @@
             .action-buttons-row { gap: 0.5rem; }
         }
         
-        /* estilo para itens ocultos no modal de minimizados */
         .hidden-item-row {
             display: flex;
             justify-content: space-between;
@@ -134,7 +203,6 @@
             background: rgba(0,0,0,0.05);
         }
 
-        /* Estilos da calculadora */
         .calculator-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -165,15 +233,10 @@
             font-size: 2rem;
             font-weight: 600;
             text-align: right;
-            letter-spacing: 2px;
             font-family: monospace;
             overflow-x: auto;
             white-space: nowrap;
         }
-        body.light-theme .calc-btn { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
-        body.light-theme .calc-btn-oper { background: rgba(250,204,21,0.3); }
-
-        /* Ponto de notificação para itens ocultos */
         .notification-dot {
             position: absolute;
             top: -2px;
@@ -183,19 +246,33 @@
             background-color: #ef4444;
             border-radius: 50%;
             border: 2px solid var(--header-bg);
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
             display: none;
-        }
-        body.light-theme .notification-dot {
-            border-color: var(--header-bg);
         }
     </style>
 </head>
 <body class="min-h-screen pb-44 antialiased">
 
+<!-- PRELOADER com ícone hambúrguer, nome do app e barra de progresso lenta (mínimo 3s) -->
+<div id="preloader">
+    <div class="preloader-content">
+        <div class="burger-icon">
+            🍔
+        </div>
+        <div class="preloader-title brand-font">
+            SMASH IT
+            <span style="font-size: 1rem; letter-spacing: 0;">pro</span>
+        </div>
+        <div class="progress-container">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="preloader-sub">
+            <i class="fas fa-hamburger"></i> Carregando stock & gestão premium
+        </div>
+    </div>
+</div>
+
 <header class="sticky top-0 z-50 bg-black/90 backdrop-blur-2xl border-b border-white/10 shadow-lg" style="background: var(--header-bg); border-bottom-color: var(--card-border);">
     <div class="max-w-xl mx-auto px-4 pt-5 pb-3">
-        <!-- Primeira linha: apenas título e selo pro -->
         <div class="flex justify-between items-center mb-1">
             <div class="flex items-baseline gap-2">
                 <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
@@ -204,37 +281,28 @@
             <div></div>
         </div>
         
-        <!-- Segunda linha: botões de ação (exceto reset completo, que foi movido para o modo gestão) -->
         <div class="action-buttons-row">
-            <!-- Alternar para Gestão de Preços -->
             <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
                 <i class="fas fa-arrow-right-arrow-left text-base"></i>
             </button>
-            <!-- Alternância de tema -->
             <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
                 <i id="theme-icon" class="fas fa-moon text-base"></i>
             </button>
-            <!-- Calculadora popup -->
             <button onclick="openCalculator()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Calculadora Popup">
                 <i class="fas fa-calculator text-base"></i>
             </button>
-            <!-- Gerir itens minimizados (ocultos) com ponto de notificação -->
             <button onclick="showHiddenItemsModal()" class="relative w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Gerir itens minimizados (ocultos)">
                 <i class="fas fa-eye-slash text-base"></i>
                 <span id="hidden-notification-dot" class="notification-dot"></span>
             </button>
-            <!-- Modo edição -->
             <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
                 <i class="fas fa-cog text-base"></i>
             </button>
-            <!-- Limpar todas quantidades -->
             <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
                 <i class="fas fa-eraser text-base"></i>
             </button>
-            <!-- NOTA: botão reset completo removido daqui e movido para o modo gestão -->
         </div>
         
-        <!-- Terceira linha: barra de pesquisa -->
         <div class="relative mt-3">
             <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
             <input type="text" id="search-input" oninput="render()" placeholder="🔎 Pesquisar item ou categoria..." class="w-full bg-white/5 border border-white/10 h-12 pl-12 pr-5 rounded-2xl outline-none text-sm focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all" style="background: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);">
@@ -246,12 +314,9 @@
     <div id="management-zone" class="hidden animate-in bg-yellow-500/5 border border-yellow-500/25 rounded-3xl p-5 backdrop-blur-sm">
         <div class="flex items-center gap-2 mb-3"><i class="fas fa-screwdriver-wrench text-yellow-400 text-sm"></i><h3 class="text-yellow-400 text-[11px] font-black uppercase tracking-[0.2rem]">Modo Gestão</h3></div>
         <button onclick="openCategoryModal()" class="w-full bg-yellow-500 text-black font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition"><i class="fas fa-layer-group"></i> Criar nova categoria</button>
-        
-        <!-- Botão Reset Completo movido para dentro do Modo Gestão -->
         <button onclick="confirmFullReset()" class="w-full mt-3 bg-red-600/30 text-red-400 font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-red-500/40 hover:bg-red-500/40 transition-all active:scale-[0.98]" title="Redefinir tudo - categorias originais">
             <i class="fas fa-arrow-rotate-left text-base"></i> Reset Completo (fábrica)
         </button>
-        
         <p class="text-[10px] text-gray-400 text-center mt-3">✦ Toque nos itens para editar ou adicionar</p>
     </div>
 
@@ -269,7 +334,7 @@
     </div>
 </div>
 
-<!-- Modal genérico (para ações diversas) -->
+<!-- Modal genérico -->
 <div id="modal-container" class="modal px-5">
     <div class="card-glass p-6 rounded-[2.5rem] w-full max-w-sm border border-yellow-500/30 shadow-2xl animate-in">
         <div class="text-center mb-2"><h3 id="modal-title" class="text-2xl font-black text-yellow-500 brand-font uppercase tracking-wide">Ação</h3><div class="w-12 h-0.5 bg-yellow-500/50 mx-auto mt-1 rounded-full"></div></div>
@@ -278,7 +343,7 @@
     </div>
 </div>
 
-<!-- Modal da Calculadora (popup independente) -->
+<!-- Modal Calculadora -->
 <div id="calculator-modal" class="calculator-modal px-5">
     <div class="card-glass p-5 rounded-[2.5rem] w-full max-w-sm border border-yellow-500/30 shadow-2xl animate-in">
         <div class="flex justify-between items-center mb-4">
@@ -291,22 +356,18 @@
             <div class="calc-btn calc-btn-oper" onclick="calcAppend('/')">÷</div>
             <div class="calc-btn calc-btn-oper" onclick="calcAppend('*')">×</div>
             <div class="calc-btn calc-btn-oper" onclick="calcBackspace()">⌫</div>
-            
             <div class="calc-btn" onclick="calcAppend('7')">7</div>
             <div class="calc-btn" onclick="calcAppend('8')">8</div>
             <div class="calc-btn" onclick="calcAppend('9')">9</div>
             <div class="calc-btn calc-btn-oper" onclick="calcAppend('-')">-</div>
-            
             <div class="calc-btn" onclick="calcAppend('4')">4</div>
             <div class="calc-btn" onclick="calcAppend('5')">5</div>
             <div class="calc-btn" onclick="calcAppend('6')">6</div>
             <div class="calc-btn calc-btn-oper" onclick="calcAppend('+')">+</div>
-            
             <div class="calc-btn" onclick="calcAppend('1')">1</div>
             <div class="calc-btn" onclick="calcAppend('2')">2</div>
             <div class="calc-btn" onclick="calcAppend('3')">3</div>
             <div class="calc-btn calc-btn-equal" onclick="calcResult()">=</div>
-            
             <div class="calc-btn" onclick="calcAppend('0')">0</div>
             <div class="calc-btn" onclick="calcAppend('.')">.</div>
             <div class="calc-btn" onclick="calcAppend('00')">00</div>
@@ -317,7 +378,7 @@
 </div>
 
 <script>
-    // ---------- DADOS PADRÃO (compatível com novo formato de visibilidade) ----------
+    // ---------- DADOS E LÓGICA DO APP (compatível) ----------
     const DEFAULT_CATEGORIES_RAW = [
         { id: 101, name: "🍔 Pães Artesanais", items: ["Pão Batata", "Pão Pimenta", "Pão Esmagadinho", "Outros"] },
         { id: 102, name: "🥩 Proteínas Smash", items: ["Carne 100g Caixa", "Carne Pacote", "Blend de Queijos", "Frango Empanado", "Bacon Pacote", "Presunto Pacote", "Ovos Bandeja"] },
@@ -328,7 +389,6 @@
         { id: 107, name: "🧂 Temperos & Extras", items: ["Manteiga Tablets", "Manteiga Barra", "Óleo Frasco", "Óleo Balde", "Sal 1kg", "Pimenta", "Alho", "Cebolinha", "Salsa"] }
     ];
 
-    // Converte para formato com visibilidade (categoria.visible e itens como objetos {name, visible})
     function convertToVisibilityFormat(categories) {
         return categories.map(cat => ({
             id: cat.id,
@@ -345,7 +405,6 @@
     let counts = {};
     let isEditMode = false;
 
-    // Carregar / inicializar dados
     function loadData() {
         let stored = localStorage.getItem('smash_inventory_pro');
         if (stored) {
@@ -376,13 +435,11 @@
         render();
     }
 
-    // Alternar visibilidade da categoria
     function toggleCategoryVisibility(catId) {
         const cat = inventory.find(c => c.id === catId);
         if(cat) { cat.visible = !cat.visible; persistData(); render(); }
     }
 
-    // Alternar visibilidade do item
     function toggleItemVisibility(catId, itemName) {
         const cat = inventory.find(c => c.id === catId);
         if(cat) {
@@ -391,19 +448,14 @@
         }
     }
 
-    // Nova função: modal para gerenciar itens minimizados (ocultos)
     function showHiddenItemsModal() {
-        // Coleta categorias invisíveis e itens invisíveis (de categorias visíveis ou não)
         const hiddenCategories = inventory.filter(cat => !cat.visible);
         const hiddenItems = [];
         inventory.forEach(cat => {
             cat.items.forEach(item => {
-                if (!item.visible) {
-                    hiddenItems.push({ catId: cat.id, catName: cat.name, itemName: item.name });
-                }
+                if (!item.visible) hiddenItems.push({ catId: cat.id, catName: cat.name, itemName: item.name });
             });
         });
-        
         if (hiddenCategories.length === 0 && hiddenItems.length === 0) {
             document.getElementById('modal-title').innerText = '📦 Minimizados';
             document.getElementById('modal-content').innerHTML = `<div class="text-center py-6"><i class="fas fa-check-circle text-3xl text-green-400 mb-3"></i><p class="text-sm">Não há itens ou categorias minimizados.</p><p class="text-xs text-gray-400 mt-2">Os itens com olho fechado aparecerão aqui.</p></div>`;
@@ -411,38 +463,21 @@
             openModal();
             return;
         }
-        
         let html = `<div class="space-y-4"><p class="text-xs text-center text-gray-400">👁️ Itens/categorias com olho fechado ficam minimizados (ocultos da tela principal).</p>`;
-        
         if (hiddenCategories.length) {
             html += `<div><div class="text-[11px] font-bold text-yellow-500 uppercase tracking-wider mb-2 flex items-center gap-2"><i class="fas fa-layer-group"></i>Categorias minimizadas</div>`;
             hiddenCategories.forEach(cat => {
-                html += `
-                    <div class="hidden-item-row">
-                        <span class="text-sm font-medium truncate">${escapeHtml(cat.name)}</span>
-                        <button onclick="restoreCategoryVisibility(${cat.id})" class="bg-yellow-500/20 hover:bg-yellow-500/40 px-3 py-1 rounded-full text-xs font-bold transition"><i class="fas fa-eye mr-1"></i>Tornar visível</button>
-                    </div>
-                `;
+                html += `<div class="hidden-item-row"><span class="text-sm font-medium truncate">${escapeHtml(cat.name)}</span><button onclick="restoreCategoryVisibility(${cat.id})" class="bg-yellow-500/20 hover:bg-yellow-500/40 px-3 py-1 rounded-full text-xs font-bold transition"><i class="fas fa-eye mr-1"></i>Tornar visível</button></div>`;
             });
             html += `</div>`;
         }
-        
         if (hiddenItems.length) {
             html += `<div><div class="text-[11px] font-bold text-yellow-500 uppercase tracking-wider mb-2 flex items-center gap-2 mt-2"><i class="fas fa-box"></i>Itens minimizados</div>`;
             hiddenItems.forEach(item => {
-                html += `
-                    <div class="hidden-item-row">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium">${escapeHtml(item.itemName)}</span>
-                            <span class="text-[10px] text-gray-400">${escapeHtml(item.catName)}</span>
-                        </div>
-                        <button onclick="restoreItemVisibility(${item.catId}, '${escapeHtml(item.itemName)}')" class="bg-yellow-500/20 hover:bg-yellow-500/40 px-3 py-1 rounded-full text-xs font-bold transition"><i class="fas fa-eye mr-1"></i>Mostrar</button>
-                    </div>
-                `;
+                html += `<div class="hidden-item-row"><div class="flex flex-col"><span class="text-sm font-medium">${escapeHtml(item.itemName)}</span><span class="text-[10px] text-gray-400">${escapeHtml(item.catName)}</span></div><button onclick="restoreItemVisibility(${item.catId}, '${escapeHtml(item.itemName)}')" class="bg-yellow-500/20 hover:bg-yellow-500/40 px-3 py-1 rounded-full text-xs font-bold transition"><i class="fas fa-eye mr-1"></i>Mostrar</button></div>`;
             });
             html += `</div>`;
         }
-        
         html += `</div>`;
         document.getElementById('modal-title').innerText = '🗂️ Minimizados (Ocultos)';
         document.getElementById('modal-content').innerHTML = html;
@@ -451,365 +486,130 @@
         openModal();
     }
     
-    // Funções auxiliares para restaurar visibilidade via modal
-    function restoreCategoryVisibility(catId) {
-        const cat = inventory.find(c => c.id === catId);
-        if (cat) { cat.visible = true; persistData(); render(); }
-        closeModal();
-        showHiddenItemsModal(); // recarrega modal atualizado
-    }
+    function restoreCategoryVisibility(catId) { const cat = inventory.find(c => c.id === catId); if(cat) { cat.visible = true; persistData(); render(); } closeModal(); showHiddenItemsModal(); }
+    function restoreItemVisibility(catId, itemName) { const cat = inventory.find(c => c.id === catId); if(cat) { const item = cat.items.find(i => i.name === itemName); if(item) { item.visible = true; persistData(); render(); } } closeModal(); showHiddenItemsModal(); }
     
-    function restoreItemVisibility(catId, itemName) {
-        const cat = inventory.find(c => c.id === catId);
-        if (cat) {
-            const item = cat.items.find(i => i.name === itemName);
-            if (item) { item.visible = true; persistData(); render(); }
-        }
-        closeModal();
-        showHiddenItemsModal(); // recarrega modal atualizado
-    }
-
-    // Atualiza o ponto vermelho de notificação no botão de olho cortado
     function updateHiddenNotification() {
         const dot = document.getElementById('hidden-notification-dot');
-        if (!dot) return;
-        // Verifica se existe alguma categoria ou item oculto
-        let hasHidden = false;
-        for (const cat of inventory) {
-            if (!cat.visible) { hasHidden = true; break; }
-            for (const item of cat.items) {
-                if (!item.visible) { hasHidden = true; break; }
-            }
-            if (hasHidden) break;
-        }
+        if(!dot) return;
+        let hasHidden = inventory.some(cat => !cat.visible || cat.items.some(item => !item.visible));
         dot.style.display = hasHidden ? 'block' : 'none';
     }
 
-    // RENDER MODIFICADO: APENAS CATEGORIAS VISÍVEIS E ITENS VISÍVEIS SÃO MOSTRADOS NA TELA PRINCIPAL
     function render() {
         const container = document.getElementById('inventory-container');
         if (!container) return;
         const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim() || '';
         container.innerHTML = '';
-
-        // Filtrar categorias visíveis
         const visibleCategories = inventory.filter(cat => cat.visible === true);
-        
         visibleCategories.forEach(category => {
-            // Filtrar itens visíveis dentro da categoria
             let visibleItems = category.items.filter(item => item.visible === true);
-            
-            // Aplicar pesquisa sobre os itens visíveis e nome da categoria
             let filteredItems = [];
             const categoryMatches = category.name.toLowerCase().includes(searchTerm);
-            
-            if (categoryMatches) {
-                filteredItems = [...visibleItems];
-            } else if (searchTerm !== "") {
-                filteredItems = visibleItems.filter(item => item.name.toLowerCase().includes(searchTerm));
-            } else {
-                filteredItems = [...visibleItems];
-            }
-            
+            if (categoryMatches) filteredItems = [...visibleItems];
+            else if (searchTerm !== "") filteredItems = visibleItems.filter(item => item.name.toLowerCase().includes(searchTerm));
+            else filteredItems = [...visibleItems];
             if (filteredItems.length === 0) return;
-            
             const catDiv = document.createElement('div');
             catDiv.className = 'animate-in space-y-3';
             const eyeIconCat = category.visible ? 'fa-eye' : 'fa-eye-slash';
-            const eyeTitle = category.visible ? 'Visível no relatório e na tela' : 'Oculto (minimizado)';
-            let headerHtml = `
-                <div class="flex justify-between items-center px-1 pb-1">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-tag text-yellow-500/70 text-[10px]"></i>
-                        <h2 class="text-yellow-500 font-extrabold uppercase text-[11px] tracking-[0.2em]">${escapeHtml(category.name)}</h2>
-                        <button onclick="toggleCategoryVisibility(${category.id})" class="eye-btn text-gray-400 hover:text-yellow-400 transition ml-1" title="${eyeTitle}">
-                            <i class="fas ${eyeIconCat} text-xs"></i>
-                        </button>
-                    </div>
-            `;
-            if (isEditMode) {
-                headerHtml += `
-                    <div class="flex gap-3 text-[9px] font-black uppercase tracking-tight">
-                        <button onclick="openItemModal(${category.id})" class="text-emerald-400 hover:text-emerald-300 transition"><i class="fas fa-plus-circle"></i> Item</button>
-                        <button onclick="openCategoryModal(${category.id})" class="text-blue-400 hover:text-blue-300"><i class="fas fa-pen"></i></button>
-                        <button onclick="confirmDeleteCategory(${category.id})" class="text-red-400 hover:text-red-300"><i class="fas fa-trash-can"></i></button>
-                    </div>
-                `;
-            }
+            let headerHtml = `<div class="flex justify-between items-center px-1 pb-1"><div class="flex items-center gap-2"><i class="fas fa-tag text-yellow-500/70 text-[10px]"></i><h2 class="text-yellow-500 font-extrabold uppercase text-[11px] tracking-[0.2em]">${escapeHtml(category.name)}</h2><button onclick="toggleCategoryVisibility(${category.id})" class="eye-btn text-gray-400 hover:text-yellow-400 transition ml-1" title="${category.visible ? 'Visível' : 'Oculto'}"><i class="fas ${eyeIconCat} text-xs"></i></button></div>`;
+            if (isEditMode) headerHtml += `<div class="flex gap-3 text-[9px] font-black"><button onclick="openItemModal(${category.id})" class="text-emerald-400 hover:text-emerald-300"><i class="fas fa-plus-circle"></i> Item</button><button onclick="openCategoryModal(${category.id})" class="text-blue-400"><i class="fas fa-pen"></i></button><button onclick="confirmDeleteCategory(${category.id})" class="text-red-400"><i class="fas fa-trash-can"></i></button></div>`;
             headerHtml += `</div>`;
             let itemsHtml = `<div class="grid gap-2.5">`;
             filteredItems.forEach(item => {
                 const key = `${category.id}-${item.name}`;
                 const quantity = counts[key] || 0;
                 const itemEyeIcon = item.visible ? 'fa-eye' : 'fa-eye-slash';
-                const itemEyeTitle = item.visible ? 'Visível no relatório e na tela' : 'Oculto (minimizado)';
-                itemsHtml += `
-                    <div class="card-glass p-4 rounded-2xl flex items-center justify-between group transition-all">
-                        <div class="flex flex-col gap-0.5 flex-1">
-                            <div class="flex items-center gap-2">
-                                <span class="font-semibold text-[15px] tracking-tight" style="color: var(--text-primary);">${escapeHtml(item.name)}</span>
-                                <button onclick="toggleItemVisibility(${category.id}, '${escapeHtml(item.name)}')" class="eye-btn text-gray-400 hover:text-yellow-400 transition" title="${itemEyeTitle}">
-                                    <i class="fas ${itemEyeIcon} text-[11px]"></i>
-                                </button>
-                            </div>
-                            ${isEditMode ? `
-                                <div class="flex gap-4 mt-0.5">
-                                    <button onclick="openItemModal(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black uppercase text-blue-400/70 hover:text-blue-400 transition">✎ Renomear</button>
-                                    <button onclick="confirmDeleteItem(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black uppercase text-red-400/70 hover:text-red-400 transition">🗑 Remover</button>
-                                </div>
-                            ` : ''}
-                        </div>
-                        <div class="flex items-center gap-3 rounded-2xl p-1.5" style="background: var(--input-bg);">
-                            <button onclick="updateCount('${key}', -1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-red-500/20 transition-all text-gray-300"><i class="fas fa-minus text-xs"></i></button>
-                            <input type="number" value="${quantity}" onchange="manualUpdate('${key}', this.value)" class="w-12 bg-transparent text-center font-bold text-yellow-500 focus:outline-none text-xl" id="input-${key}" inputmode="numeric">
-                            <button onclick="updateCount('${key}', 1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center active:bg-green-500/20 transition-all text-gray-300"><i class="fas fa-plus text-xs"></i></button>
-                        </div>
-                    </div>
-                `;
+                itemsHtml += `<div class="card-glass p-4 rounded-2xl flex items-center justify-between group"><div class="flex flex-col flex-1"><div class="flex items-center gap-2"><span class="font-semibold text-[15px]" style="color: var(--text-primary);">${escapeHtml(item.name)}</span><button onclick="toggleItemVisibility(${category.id}, '${escapeHtml(item.name)}')" class="eye-btn text-gray-400 hover:text-yellow-400"><i class="fas ${itemEyeIcon} text-[11px]"></i></button></div>${isEditMode ? `<div class="flex gap-4 mt-0.5"><button onclick="openItemModal(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black text-blue-400">✎ Renomear</button><button onclick="confirmDeleteItem(${category.id}, '${escapeHtml(item.name)}')" class="text-[9px] font-black text-red-400">🗑 Remover</button></div>` : ''}</div><div class="flex items-center gap-3 rounded-2xl p-1.5" style="background: var(--input-bg);"><button onclick="updateCount('${key}', -1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-300"><i class="fas fa-minus text-xs"></i></button><input type="number" value="${quantity}" onchange="manualUpdate('${key}', this.value)" class="w-12 bg-transparent text-center font-bold text-yellow-500 focus:outline-none text-xl" id="input-${key}" inputmode="numeric"><button onclick="updateCount('${key}', 1)" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-300"><i class="fas fa-plus text-xs"></i></button></div></div>`;
             });
             itemsHtml += `</div>`;
             catDiv.innerHTML = headerHtml + itemsHtml;
             container.appendChild(catDiv);
         });
-
-        if (container.children.length === 0) {
-            container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item visível.</p><p class="text-xs mt-2">🔍 Use o botão de olho cortado para gerir itens minimizados.</p></div>`;
-        }
-        
-        // Atualiza o ponto de notificação sempre que o inventário é renderizado
+        if (container.children.length === 0) container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item visível.</p><p class="text-xs mt-2">🔍 Use o botão de olho cortado para gerir itens minimizados.</p></div>`;
         updateHiddenNotification();
     }
 
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;').replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, c=>c); }
-
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
     function updateCount(key, delta) { let cur = counts[key]||0; let nv = Math.max(0, cur+delta); counts[key]=nv; let inp = document.getElementById(`input-${key}`); if(inp) inp.value=nv; persistData(); }
     function manualUpdate(key, valStr) { let raw = parseInt(valStr,10); if(isNaN(raw)) raw=0; counts[key]=Math.max(0,raw); persistData(); let inp = document.getElementById(`input-${key}`); if(inp) inp.value=counts[key]; }
-
-    function confirmClearChecked() {
-        document.getElementById('modal-title').innerText = '🧹 Limpar Quantidades';
-        document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-2"><i class="fas fa-broom-ball text-3xl text-amber-400"></i><p class="text-sm font-medium">Apagar TODOS os números de stock?</p><p class="text-[11px] text-gray-400">As contagens de todos os itens voltarão a zero.<br>Categorias e itens permanecem intactos.</p></div>`;
-        document.getElementById('modal-confirm').onclick = () => { counts = {}; persistData(); closeModal(); render(); };
-        openModal();
-    }
-
-    function confirmFullReset() {
-        document.getElementById('modal-title').innerText = '⚠️ RESET COMPLETO';
-        document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-3"><i class="fas fa-database text-3xl text-red-500 animate-pulse"></i><p class="text-sm font-bold text-white">Redefinir para configurações originais?</p><div class="bg-red-500/10 p-3 rounded-xl text-left text-[12px]"><i class="fas fa-circle-info text-red-400 mr-1"></i> Isto irá:<br>• Restaurar categorias e itens padrão<br>• Zerar TODAS as quantidades contadas<br>• Limpar notas/observações<br>• Remover categorias/itens personalizados</div></div>`;
-        document.getElementById('modal-confirm').onclick = () => {
-            inventory = convertToVisibilityFormat(DEFAULT_CATEGORIES_RAW);
-            counts = {};
-            document.getElementById('notes').value = '';
-            localStorage.setItem('smash_notes_pro', '');
-            persistData();
-            render();
-            closeModal();
-        };
-        openModal();
-    }
-
+    function confirmClearChecked() { document.getElementById('modal-title').innerText = '🧹 Limpar Quantidades'; document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-2"><i class="fas fa-broom-ball text-3xl text-amber-400"></i><p class="text-sm font-medium">Apagar TODOS os números de stock?</p><p class="text-[11px] text-gray-400">As contagens de todos os itens voltarão a zero.<br>Categorias e itens permanecem intactos.</p></div>`; document.getElementById('modal-confirm').onclick = () => { counts = {}; persistData(); closeModal(); render(); }; openModal(); }
+    function confirmFullReset() { document.getElementById('modal-title').innerText = '⚠️ RESET COMPLETO'; document.getElementById('modal-content').innerHTML = `<div class="text-center space-y-3"><i class="fas fa-database text-3xl text-red-500 animate-pulse"></i><p class="text-sm font-bold">Redefinir para configurações originais?</p><div class="bg-red-500/10 p-3 rounded-xl text-left text-[12px]"><i class="fas fa-circle-info text-red-400 mr-1"></i> Isto irá:<br>• Restaurar categorias e itens padrão<br>• Zerar TODAS as quantidades<br>• Limpar notas/observações</div></div>`; document.getElementById('modal-confirm').onclick = () => { inventory = convertToVisibilityFormat(DEFAULT_CATEGORIES_RAW); counts = {}; document.getElementById('notes').value = ''; localStorage.setItem('smash_notes_pro', ''); persistData(); render(); closeModal(); }; openModal(); }
     function openModal() { document.getElementById('modal-container').classList.add('active'); }
     function closeModal() { document.getElementById('modal-container').classList.remove('active'); }
-
-    function openCategoryModal(catId = null) {
-        const category = catId ? inventory.find(c => c.id === catId) : null;
-        document.getElementById('modal-title').innerText = catId ? '✏️ Editar Categoria' : '➕ Nova Categoria';
-        document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome da categoria</label><input type="text" id="modal-input" value="${category ? escapeHtml(category.name) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500 text-base" placeholder="ex: 🧂 Temperos Especiais" autocomplete="off"></div>`;
-        document.getElementById('modal-confirm').onclick = () => {
-            let newName = document.getElementById('modal-input').value.trim();
-            if(!newName) return;
-            if(catId) {
-                category.name = newName;
-            } else {
-                let newId = Date.now();
-                inventory.push({ id: newId, name: newName, visible: true, items: [{ name: "Produto 1", visible: true }, { name: "Produto 2", visible: true }, { name: "Produto 3", visible: true }] });
-            }
-            persistData(); closeModal(); render();
-        };
-        openModal();
-    }
-
-    function openItemModal(catId, oldItemName = null) {
-        const category = inventory.find(c => c.id === catId);
-        if(!category) return;
-        const isEditing = (oldItemName !== null);
-        document.getElementById('modal-title').innerText = isEditing ? '✏️ Renomear Item' : '✨ Adicionar Item';
-        document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nome do item</label><input type="text" id="modal-input" value="${isEditing ? escapeHtml(oldItemName) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500" placeholder="Ex: Cebola crispy" autocomplete="off"></div>`;
-        document.getElementById('modal-confirm').onclick = () => {
-            let newName = document.getElementById('modal-input').value.trim();
-            if(!newName) return;
-            if(isEditing) {
-                const oldKey = `${catId}-${oldItemName}`;
-                const newKey = `${catId}-${newName}`;
-                if(counts[oldKey] !== undefined) { counts[newKey] = counts[oldKey]; delete counts[oldKey]; }
-                const itemObj = category.items.find(i => i.name === oldItemName);
-                if(itemObj) itemObj.name = newName;
-            } else {
-                if(!category.items.some(i => i.name === newName)) category.items.push({ name: newName, visible: true });
-            }
-            persistData(); closeModal(); render();
-        };
-        openModal();
-    }
-
-    function confirmDeleteCategory(catId) {
-        const cat = inventory.find(c => c.id === catId);
-        if(!cat) return;
-        document.getElementById('modal-title').innerText = '⚠️ Apagar Categoria';
-        document.getElementById('modal-content').innerHTML = `<div class="text-center text-sm text-gray-300 space-y-3"><i class="fas fa-trash-alt text-3xl text-red-400 opacity-70"></i><p>Remover <strong class="text-white">${escapeHtml(cat.name)}</strong>? <br> <span class="text-red-400 text-xs">Todos os itens e contagens serão eliminados.</span></p></div>`;
-        document.getElementById('modal-confirm').onclick = () => {
-            cat.items.forEach(item => delete counts[`${cat.id}-${item.name}`]);
-            inventory = inventory.filter(c => c.id !== catId);
-            persistData(); closeModal(); render();
-        };
-        openModal();
-    }
-
-    function confirmDeleteItem(catId, itemName) {
-        document.getElementById('modal-title').innerText = '❌ Remover Item';
-        document.getElementById('modal-content').innerHTML = `<div class="text-center"><p class="text-gray-200 text-sm">Tem certeza que deseja excluir <strong class="text-yellow-400">${escapeHtml(itemName)}</strong>?</p><p class="text-xs text-gray-500 mt-1">A contagem associada será zerada.</p></div>`;
-        document.getElementById('modal-confirm').onclick = () => {
-            const category = inventory.find(c => c.id === catId);
-            if(category) {
-                category.items = category.items.filter(i => i.name !== itemName);
-                delete counts[`${catId}-${itemName}`];
-                persistData();
-            }
-            closeModal(); render();
-        };
-        openModal();
-    }
-
-    // RELATÓRIO WHATSAPP: mantém apenas categorias e itens visíveis
-    function sendToWhatsApp() {
-        const notes = document.getElementById('notes').value;
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString('pt-PT', { day:'2-digit', month:'2-digit', year:'numeric' });
-        const formattedTime = now.toLocaleTimeString('pt-PT', { hour:'2-digit', minute:'2-digit' });
-        let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`;
-        
-        inventory.forEach(cat => {
-            if (!cat.visible) return;
-            let catSection = `\n*${cat.name.toUpperCase()}*\n`;
-            let hasVisibleItem = false;
-            cat.items.forEach(item => {
-                if (!item.visible) return;
-                const qty = counts[`${cat.id}-${item.name}`] || 0;
-                catSection += `▸ ${item.name}: *${qty}* un.\n`;
-                hasVisibleItem = true;
-            });
-            if (hasVisibleItem) message += catSection + `\n`;
-        });
-        
-        if (notes.trim().length > 0) message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
-        message += `\n🔁 Relatório gerado via Smash Contagem`;
-        const encoded = encodeURIComponent(message);
-        window.open(`https://wa.me/?text=${encoded}`, '_blank');
-    }
-
-    // TEMA
-    function toggleTheme() {
-        const body = document.body;
-        const themeIcon = document.getElementById('theme-icon');
-        const isLight = body.classList.contains('light-theme');
-        
-        if (isLight) {
-            body.classList.remove('light-theme');
-            localStorage.setItem('smash_theme', 'dark');
-            themeIcon.className = 'fas fa-moon text-base';
-        } else {
-            body.classList.add('light-theme');
-            localStorage.setItem('smash_theme', 'light');
-            themeIcon.className = 'fas fa-sun text-base';
-        }
-        // Atualiza a cor da borda do ponto de notificação ao mudar o tema
-        updateHiddenNotification();
-    }
+    function openCategoryModal(catId = null) { const category = catId ? inventory.find(c => c.id === catId) : null; document.getElementById('modal-title').innerText = catId ? '✏️ Editar Categoria' : '➕ Nova Categoria'; document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase">Nome da categoria</label><input type="text" id="modal-input" value="${category ? escapeHtml(category.name) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500 text-base" placeholder="ex: 🧂 Temperos Especiais" autocomplete="off"></div>`; document.getElementById('modal-confirm').onclick = () => { let newName = document.getElementById('modal-input').value.trim(); if(!newName) return; if(catId) { category.name = newName; } else { let newId = Date.now(); inventory.push({ id: newId, name: newName, visible: true, items: [{ name: "Produto 1", visible: true }, { name: "Produto 2", visible: true }, { name: "Produto 3", visible: true }] }); } persistData(); closeModal(); render(); }; openModal(); }
+    function openItemModal(catId, oldItemName = null) { const category = inventory.find(c => c.id === catId); if(!category) return; const isEditing = (oldItemName !== null); document.getElementById('modal-title').innerText = isEditing ? '✏️ Renomear Item' : '✨ Adicionar Item'; document.getElementById('modal-content').innerHTML = `<div class="space-y-2"><label class="text-[10px] font-bold text-gray-400 uppercase">Nome do item</label><input type="text" id="modal-input" value="${isEditing ? escapeHtml(oldItemName) : ''}" class="w-full h-14 bg-black/40 border border-white/15 px-5 rounded-xl text-white outline-none focus:border-yellow-500" placeholder="Ex: Cebola crispy" autocomplete="off"></div>`; document.getElementById('modal-confirm').onclick = () => { let newName = document.getElementById('modal-input').value.trim(); if(!newName) return; if(isEditing) { const oldKey = `${catId}-${oldItemName}`; if(counts[oldKey] !== undefined) { counts[`${catId}-${newName}`] = counts[oldKey]; delete counts[oldKey]; } const itemObj = category.items.find(i => i.name === oldItemName); if(itemObj) itemObj.name = newName; } else { if(!category.items.some(i => i.name === newName)) category.items.push({ name: newName, visible: true }); } persistData(); closeModal(); render(); }; openModal(); }
+    function confirmDeleteCategory(catId) { const cat = inventory.find(c => c.id === catId); if(!cat) return; document.getElementById('modal-title').innerText = '⚠️ Apagar Categoria'; document.getElementById('modal-content').innerHTML = `<div class="text-center text-sm text-gray-300 space-y-3"><i class="fas fa-trash-alt text-3xl text-red-400 opacity-70"></i><p>Remover <strong class="text-white">${escapeHtml(cat.name)}</strong>? <br> <span class="text-red-400 text-xs">Todos os itens e contagens serão eliminados.</span></p></div>`; document.getElementById('modal-confirm').onclick = () => { cat.items.forEach(item => delete counts[`${cat.id}-${item.name}`]); inventory = inventory.filter(c => c.id !== catId); persistData(); closeModal(); render(); }; openModal(); }
+    function confirmDeleteItem(catId, itemName) { document.getElementById('modal-title').innerText = '❌ Remover Item'; document.getElementById('modal-content').innerHTML = `<div class="text-center"><p class="text-gray-200 text-sm">Tem certeza que deseja excluir <strong class="text-yellow-400">${escapeHtml(itemName)}</strong>?</p><p class="text-xs text-gray-500 mt-1">A contagem associada será zerada.</p></div>`; document.getElementById('modal-confirm').onclick = () => { const category = inventory.find(c => c.id === catId); if(category) { category.items = category.items.filter(i => i.name !== itemName); delete counts[`${catId}-${itemName}`]; persistData(); } closeModal(); render(); }; openModal(); }
+    function sendToWhatsApp() { const notes = document.getElementById('notes').value; const now = new Date(); const formattedDate = now.toLocaleDateString('pt-PT', { day:'2-digit', month:'2-digit', year:'numeric' }); const formattedTime = now.toLocaleTimeString('pt-PT', { hour:'2-digit', minute:'2-digit' }); let message = `🍔 *SMASH IT PRO - CONTAGEM* 🍔\n📅 ${formattedDate}  •  ⏰ ${formattedTime}\n━━━━━━━━━━━━━━━━━━━━\n`; inventory.forEach(cat => { if (!cat.visible) return; let catSection = `\n*${cat.name.toUpperCase()}*\n`; let hasItem = false; cat.items.forEach(item => { if (!item.visible) return; const qty = counts[`${cat.id}-${item.name}`] || 0; catSection += `▸ ${item.name}: *${qty}* un.\n`; hasItem = true; }); if (hasItem) message += catSection + `\n`; }); if (notes.trim().length > 0) message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`; message += `\n🔁 Relatório gerado via Smash Contagem`; window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank'); }
+    function toggleTheme() { const body = document.body; const themeIcon = document.getElementById('theme-icon'); const isLight = body.classList.contains('light-theme'); if (isLight) { body.classList.remove('light-theme'); localStorage.setItem('smash_theme', 'dark'); themeIcon.className = 'fas fa-moon text-base'; } else { body.classList.add('light-theme'); localStorage.setItem('smash_theme', 'light'); themeIcon.className = 'fas fa-sun text-base'; } updateHiddenNotification(); }
+    function loadTheme() { const savedTheme = localStorage.getItem('smash_theme'); if (savedTheme === 'light') { document.body.classList.add('light-theme'); document.getElementById('theme-icon').className = 'fas fa-sun text-base'; } else { document.body.classList.remove('light-theme'); document.getElementById('theme-icon').className = 'fas fa-moon text-base'; } }
+    function switchToPriceManager() { window.location.href = "https://dev-ronaldo-alves.github.io/smash-it-gestao-de-precos/"; }
     
-    function loadTheme() {
-        const savedTheme = localStorage.getItem('smash_theme');
-        const body = document.body;
-        const themeIcon = document.getElementById('theme-icon');
-        if (savedTheme === 'light') {
-            body.classList.add('light-theme');
-            themeIcon.className = 'fas fa-sun text-base';
-        } else {
-            body.classList.remove('light-theme');
-            themeIcon.className = 'fas fa-moon text-base';
-        }
-    }
-
-    // ALTERNAR PARA GESTÃO DE PREÇOS
-    function switchToPriceManager() {
-        window.location.href = "https://dev-ronaldo-alves.github.io/smash-it-gestao-de-precos/";
-    }
-
-    // ---------- LÓGICA DA CALCULADORA POPUP ----------
+    // Calculadora
     let calcExpression = "0";
+    function updateCalcScreen() { const screen = document.getElementById('calc-screen'); if (screen) screen.innerText = calcExpression; }
+    function calcAppend(v) { if (calcExpression === "0" && !isNaN(v) && v!=='.') calcExpression = v; else calcExpression += v; if (calcExpression.length > 30) calcExpression = calcExpression.slice(0,30); updateCalcScreen(); }
+    function calcClear() { calcExpression = "0"; updateCalcScreen(); }
+    function calcBackspace() { if (calcExpression.length === 1 || (calcExpression.length === 1 && calcExpression !== "0")) calcExpression = "0"; else calcExpression = calcExpression.slice(0, -1); if (calcExpression === "") calcExpression = "0"; updateCalcScreen(); }
+    function calcResult() { try { let expr = calcExpression.replace(/×/g,'*').replace(/÷/g,'/'); if (!/^[\d+\-*/.()\s]+$/.test(expr)) throw new Error(); let result = eval(expr); result = parseFloat(result.toFixed(8)); calcExpression = String(result); updateCalcScreen(); } catch(e) { calcExpression = "Erro"; updateCalcScreen(); setTimeout(() => { if(calcExpression === "Erro") calcExpression = "0"; updateCalcScreen(); }, 1200); } }
+    function openCalculator() { document.getElementById('calculator-modal').classList.add('active'); }
+    function closeCalculator() { document.getElementById('calculator-modal').classList.remove('active'); }
+    document.getElementById('calculator-modal')?.addEventListener('click', function(e) { if (e.target === this) closeCalculator(); });
 
-    function updateCalcScreen() {
-        const screen = document.getElementById('calc-screen');
-        if (screen) screen.innerText = calcExpression.length > 20 ? calcExpression.slice(0, 20) + "…" : calcExpression;
-    }
-
-    function calcAppend(value) {
-        if (calcExpression === "0" && !isNaN(value) && value !== '.') calcExpression = value;
-        else calcExpression += value;
-        if (calcExpression.length > 30) calcExpression = calcExpression.slice(0, 30);
-        updateCalcScreen();
-    }
-
-    function calcClear() {
-        calcExpression = "0";
-        updateCalcScreen();
-    }
-
-    function calcBackspace() {
-        if (calcExpression.length === 1 || (calcExpression.length === 1 && calcExpression !== "0")) calcExpression = "0";
-        else calcExpression = calcExpression.slice(0, -1);
-        if (calcExpression === "") calcExpression = "0";
-        updateCalcScreen();
-    }
-
-    function calcResult() {
-        try {
-            let expr = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
-            if (!/^[\d+\-*/.()\s]+$/.test(expr)) throw new Error('Expressão inválida');
-            let result = eval(expr);
-            if (typeof result === 'number') result = parseFloat(result.toFixed(8));
-            calcExpression = String(result);
-            updateCalcScreen();
-        } catch(e) {
-            calcExpression = "Erro";
-            updateCalcScreen();
-            setTimeout(() => { if(calcExpression === "Erro") calcExpression = "0"; updateCalcScreen(); }, 1200);
+    // --- PRELOADER LENTO: mínimo 3 segundos visível ---
+    window.addEventListener('load', function() {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            // Garantir que o preloader fique ativo pelo menos 3000ms após o início da página
+            // Como a animação da barra leva ~2.8s, adicionamos um delay extra para totalizar 3s
+            const startTime = performance.now();
+            const remainingTime = () => Math.max(0, 3000 - (performance.now() - startTime));
+            
+            const hidePreloader = () => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 600);
+            };
+            
+            // Se já passou 3 segundos, esconde imediatamente; senão, espera o tempo restante
+            const delay = remainingTime();
+            if (delay <= 0) {
+                hidePreloader();
+            } else {
+                setTimeout(hidePreloader, delay);
+            }
         }
-    }
-
-    function openCalculator() {
-        document.getElementById('calculator-modal').classList.add('active');
-    }
-
-    function closeCalculator() {
-        document.getElementById('calculator-modal').classList.remove('active');
-    }
-
-    document.getElementById('calculator-modal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeCalculator();
     });
 
-    // Inicialização
+    // Inicialização do app
     loadData();
-    window.onload = () => {
+    // Forçar o load de notas e tema após o preloader já ter sido configurado, mas sem interferir
+    window.addEventListener('load', () => {
         loadNotes();
         loadTheme();
         render();
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
-                loadData();
-                render();
-            }
+    });
+    // Fallback para garantir que o render aconteça mesmo se load já tiver ocorrido antes (mas load garante)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
+            loadTheme();
+            render();
         });
-    };
+    } else {
+        loadNotes();
+        loadTheme();
+        render();
+    }
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'smash_inventory_pro' || e.key === 'smash_counts_pro') {
+            loadData();
+            render();
+        }
+    });
 </script>
 </body>
 </html>
