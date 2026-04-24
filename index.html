@@ -172,6 +172,23 @@
         }
         body.light-theme .calc-btn { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
         body.light-theme .calc-btn-oper { background: rgba(250,204,21,0.3); }
+
+        /* Ponto de notificação para itens ocultos */
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid var(--header-bg);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+            display: none;
+        }
+        body.light-theme .notification-dot {
+            border-color: var(--header-bg);
+        }
     </style>
 </head>
 <body class="min-h-screen pb-44 antialiased">
@@ -184,11 +201,10 @@
                 <h1 class="text-4xl btn-smash px-4 py-1 rounded-2xl shadow-md brand-font tracking-wider">SMASH IT</h1>
                 <span class="text-[10px] font-bold text-yellow-500/80 uppercase tracking-[0.3em]">pro</span>
             </div>
-            <!-- Espaço vazio para equilíbrio visual -->
             <div></div>
         </div>
         
-        <!-- Segunda linha: TODOS os botões de ação (juntos, responsivos) -->
+        <!-- Segunda linha: botões de ação (exceto reset completo, que foi movido para o modo gestão) -->
         <div class="action-buttons-row">
             <!-- Alternar para Gestão de Preços -->
             <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
@@ -202,9 +218,10 @@
             <button onclick="openCalculator()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Calculadora Popup">
                 <i class="fas fa-calculator text-base"></i>
             </button>
-            <!-- Gerir itens minimizados (ocultos) -->
-            <button onclick="showHiddenItemsModal()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Gerir itens minimizados (ocultos)">
+            <!-- Gerir itens minimizados (ocultos) com ponto de notificação -->
+            <button onclick="showHiddenItemsModal()" class="relative w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Gerir itens minimizados (ocultos)">
                 <i class="fas fa-eye-slash text-base"></i>
+                <span id="hidden-notification-dot" class="notification-dot"></span>
             </button>
             <!-- Modo edição -->
             <button id="btn-edit-mode" onclick="toggleEditMode()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
@@ -214,10 +231,7 @@
             <button onclick="confirmClearChecked()" class="w-11 h-11 rounded-full bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/40 hover:bg-amber-500/30 transition-all" title="Limpar todas as quantidades">
                 <i class="fas fa-eraser text-base"></i>
             </button>
-            <!-- Reset total -->
-            <button onclick="confirmFullReset()" class="w-11 h-11 rounded-full bg-red-600/20 text-red-400 flex items-center justify-center border border-red-500/40 hover:bg-red-500/30 transition-all" title="Redefinir tudo - categorias originais">
-                <i class="fas fa-arrow-rotate-left text-base"></i>
-            </button>
+            <!-- NOTA: botão reset completo removido daqui e movido para o modo gestão -->
         </div>
         
         <!-- Terceira linha: barra de pesquisa -->
@@ -232,6 +246,12 @@
     <div id="management-zone" class="hidden animate-in bg-yellow-500/5 border border-yellow-500/25 rounded-3xl p-5 backdrop-blur-sm">
         <div class="flex items-center gap-2 mb-3"><i class="fas fa-screwdriver-wrench text-yellow-400 text-sm"></i><h3 class="text-yellow-400 text-[11px] font-black uppercase tracking-[0.2rem]">Modo Gestão</h3></div>
         <button onclick="openCategoryModal()" class="w-full bg-yellow-500 text-black font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition"><i class="fas fa-layer-group"></i> Criar nova categoria</button>
+        
+        <!-- Botão Reset Completo movido para dentro do Modo Gestão -->
+        <button onclick="confirmFullReset()" class="w-full mt-3 bg-red-600/30 text-red-400 font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-red-500/40 hover:bg-red-500/40 transition-all active:scale-[0.98]" title="Redefinir tudo - categorias originais">
+            <i class="fas fa-arrow-rotate-left text-base"></i> Reset Completo (fábrica)
+        </button>
+        
         <p class="text-[10px] text-gray-400 text-center mt-3">✦ Toque nos itens para editar ou adicionar</p>
     </div>
 
@@ -449,6 +469,22 @@
         showHiddenItemsModal(); // recarrega modal atualizado
     }
 
+    // Atualiza o ponto vermelho de notificação no botão de olho cortado
+    function updateHiddenNotification() {
+        const dot = document.getElementById('hidden-notification-dot');
+        if (!dot) return;
+        // Verifica se existe alguma categoria ou item oculto
+        let hasHidden = false;
+        for (const cat of inventory) {
+            if (!cat.visible) { hasHidden = true; break; }
+            for (const item of cat.items) {
+                if (!item.visible) { hasHidden = true; break; }
+            }
+            if (hasHidden) break;
+        }
+        dot.style.display = hasHidden ? 'block' : 'none';
+    }
+
     // RENDER MODIFICADO: APENAS CATEGORIAS VISÍVEIS E ITENS VISÍVEIS SÃO MOSTRADOS NA TELA PRINCIPAL
     function render() {
         const container = document.getElementById('inventory-container');
@@ -539,6 +575,9 @@
         if (container.children.length === 0) {
             container.innerHTML = `<div class="text-center py-12 text-gray-400 text-sm card-glass rounded-3xl p-8"><i class="fas fa-box-open text-4xl mb-3 opacity-50"></i><p>Nenhum item visível.</p><p class="text-xs mt-2">🔍 Use o botão de olho cortado para gerir itens minimizados.</p></div>`;
         }
+        
+        // Atualiza o ponto de notificação sempre que o inventário é renderizado
+        updateHiddenNotification();
     }
 
     function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;').replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, c=>c); }
@@ -682,6 +721,8 @@
             localStorage.setItem('smash_theme', 'light');
             themeIcon.className = 'fas fa-sun text-base';
         }
+        // Atualiza a cor da borda do ponto de notificação ao mudar o tema
+        updateHiddenNotification();
     }
     
     function loadTheme() {
