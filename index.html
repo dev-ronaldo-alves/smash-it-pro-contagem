@@ -310,7 +310,7 @@
         </div>
         
         <div class="action-buttons-row">
-            <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Gestão de Preços">
+            <button onclick="switchToPriceManager()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50" title="Alternar para Checklist">
                 <i class="fas fa-arrow-right-arrow-left text-base"></i>
             </button>
             <button id="btn-theme-toggle" onclick="toggleTheme()" class="w-11 h-11 rounded-full bg-white/5 flex items-center justify-center text-gray-300 border border-white/15 transition-all duration-300 hover:border-yellow-500/50">
@@ -595,7 +595,7 @@
     function confirmDeleteItem(catId, itemName) { document.getElementById('modal-title').innerText = '❌ Remover Item'; document.getElementById('modal-content').innerHTML = `<div class="text-center"><p class="text-gray-200 text-sm">Tem certeza que deseja excluir <strong class="text-yellow-400">${escapeHtml(itemName)}</strong>?</p><p class="text-xs text-gray-500 mt-1">A contagem associada será zerada.</p></div>`; document.getElementById('modal-confirm').onclick = () => { const category = inventory.find(c => c.id === catId); if(category) { category.items = category.items.filter(i => i.name !== itemName); delete counts[`${catId}-${itemName}`]; persistData(); } closeModal(); render(); }; openModal(); }
     function toggleTheme() { const body = document.body; const themeIcon = document.getElementById('theme-icon'); const isLight = body.classList.contains('light-theme'); if (isLight) { body.classList.remove('light-theme'); localStorage.setItem('smash_theme', 'dark'); themeIcon.className = 'fas fa-moon text-base'; } else { body.classList.add('light-theme'); localStorage.setItem('smash_theme', 'light'); themeIcon.className = 'fas fa-sun text-base'; } updateHiddenNotification(); }
     function loadTheme() { const savedTheme = localStorage.getItem('smash_theme'); if (savedTheme === 'light') { document.body.classList.add('light-theme'); document.getElementById('theme-icon').className = 'fas fa-sun text-base'; } else { document.body.classList.remove('light-theme'); document.getElementById('theme-icon').className = 'fas fa-moon text-base'; } }
-    function switchToPriceManager() { window.location.href = "https://dev-ronaldo-alves.github.io/smash-it-gestao-de-precos/"; }
+    function switchToPriceManager() { window.location.href = "https://dev-ronaldo-alves.github.io/smash-it-checklist/"; }
     
     // Calculadora
     let calcExpression = "0";
