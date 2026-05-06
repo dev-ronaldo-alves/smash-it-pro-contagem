@@ -356,22 +356,27 @@
     </div>
 </main>
 
-<!-- MÓDULO DE FOTOS + BOTÃO ENVIAR (adicionado sem quebrar o original) -->
+<!-- MÓDULO DE FOTOS + BOTÃO ENVIAR (com opção minimizar adicionada) -->
 <div class="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-40" style="background: var(--footer-gradient);">
     <div class="max-w-xl mx-auto">
-        <!-- Área de fotos anexadas -->
-        <div class="mb-3 rounded-2xl p-3 card-glass border border-yellow-500/30">
+        <!-- Área de fotos anexadas - agora com ID e controle de minimizar -->
+        <div id="fotosModuleContainer" class="mb-3 rounded-2xl p-3 card-glass border border-yellow-500/30">
             <div class="flex justify-between items-center mb-2 px-1">
                 <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider"><i class="fas fa-camera mr-1"></i> FOTOS DO RELATÓRIO</span>
+                <button onclick="toggleFotosMinimized()" class="eye-btn text-gray-400 hover:text-yellow-400 transition" title="Minimizar / Expandir módulo de fotos">
+                    <i id="fotosEyeIcon" class="fas fa-eye text-xs"></i>
+                </button>
+            </div>
+            <div id="fotosContent">
                 <div class="flex gap-2">
                     <button onclick="openCamera()" class="btn-photo text-xs"><i class="fas fa-camera-retro"></i> <span class="hidden sm:inline">Câmara</span></button>
                     <button onclick="openGallery()" class="btn-photo text-xs"><i class="fas fa-images"></i> <span class="hidden sm:inline">Galeria</span></button>
                 </div>
+                <div id="photo-preview" class="photo-scroll mt-2">
+                    <div class="text-gray-400 text-xs flex items-center justify-center w-full py-1">📸 Adicione até 4 fotos (câmara ou galeria)</div>
+                </div>
+                <p class="text-[9px] text-gray-400 text-center mt-1">Máx. 4 imagens. Toque em X para remover.</p>
             </div>
-            <div id="photo-preview" class="photo-scroll">
-                <div class="text-gray-400 text-xs flex items-center justify-center w-full py-1">📸 Adicione até 4 fotos (câmara ou galeria)</div>
-            </div>
-            <p class="text-[9px] text-gray-400 text-center mt-1">Máx. 4 imagens. Toque em X para remover.</p>
         </div>
         <!-- Botão enviar (preservado original) -->
         <button onclick="sendToWhatsApp()" class="w-full btn-smash font-bold h-16 rounded-2xl text-sm uppercase tracking-[0.15em] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-500/20 active:scale-[0.98] transition-all">
@@ -483,15 +488,7 @@
         else { btn.classList.remove('edit-active'); zone.classList.add('hidden'); }
         render();
     }
-    // ... (todas as funções originais de render, modais, etc. foram mantidas)
-    // Inserir aqui todas as funções originais (toggleCategoryVisibility, toggleItemVisibility, showHiddenItemsModal, etc.)
-    // Para não repetir o código extenso, assumimos que elas estão presentes e intactas.
-    // Como o pedido é não modificar o restante, vou copiar exatamente as funções do original.
     
-    // (Corte para brevidade, mas no código final estarão todas as funções originais completas)
-    // A partir daqui segue o código original integral. Na resposta final, incluo tudo sem omissões.
-    
-    // --- INÍCIO DO BLOCO ORIGINAL (mantido exatamente igual) ---
     function toggleCategoryVisibility(catId) {
         const cat = inventory.find(c => c.id === catId);
         if(cat) { cat.visible = !cat.visible; persistData(); render(); }
@@ -624,8 +621,35 @@
         }
     });
 
-    // --- MÓDULO DE FOTOS (APENAS ADICIONADO, SEM ALTERAR O RESTO) ---
+    // --- MÓDULO DE FOTOS COM MINIMIZAR (NOVO) ---
     let attachedPhotos = []; // guarda objetos { file, dataUrl }
+    let fotosMinimized = false;
+
+    function loadFotosState() {
+        const saved = localStorage.getItem('smash_fotos_minimized');
+        if (saved === 'true') fotosMinimized = true;
+        else fotosMinimized = false;
+        applyFotosMinimizedUI();
+    }
+
+    function toggleFotosMinimized() {
+        fotosMinimized = !fotosMinimized;
+        localStorage.setItem('smash_fotos_minimized', fotosMinimized);
+        applyFotosMinimizedUI();
+    }
+
+    function applyFotosMinimizedUI() {
+        const fotosContent = document.getElementById('fotosContent');
+        const eyeIcon = document.getElementById('fotosEyeIcon');
+        if (!fotosContent || !eyeIcon) return;
+        if (fotosMinimized) {
+            fotosContent.style.display = 'none';
+            eyeIcon.className = 'fas fa-eye-slash text-xs';
+        } else {
+            fotosContent.style.display = 'block';
+            eyeIcon.className = 'fas fa-eye text-xs';
+        }
+    }
 
     function updatePhotoPreview() {
         const container = document.getElementById('photo-preview');
@@ -668,7 +692,7 @@
         document.getElementById('gallery-input').click();
     }
 
-    // Configurar os inputs
+    // Configurar os inputs de imagem
     const cameraInput = document.getElementById('camera-input');
     const galleryInput = document.getElementById('gallery-input');
     if(cameraInput) {
@@ -689,7 +713,6 @@
     }
 
     // Função sendToWhatsApp modificada para incluir fotos via Web Share quando possível
-    const originalSendToWhatsApp = window.sendToWhatsApp; // (se existir, mas vamos sobrescrever)
     window.sendToWhatsApp = async function() {
         const notes = document.getElementById('notes').value;
         const now = new Date();
@@ -739,17 +762,20 @@
     window.addEventListener('load', () => {
         loadNotes();
         loadTheme();
+        loadFotosState();   // carregar estado minimizado das fotos
         render();
     });
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             loadNotes();
             loadTheme();
+            loadFotosState();
             render();
         });
     } else {
         loadNotes();
         loadTheme();
+        loadFotosState();
         render();
     }
     window.addEventListener('storage', (e) => {
