@@ -712,7 +712,7 @@
         };
     }
 
-    // Função sendToWhatsApp modificada para incluir fotos via Web Share quando possível
+    // =========== FUNÇÃO ENVIAR WHATSAPP - MODIFICADA PARA CHAMAR O APP DIRETAMENTE ===========
     window.sendToWhatsApp = async function() {
         const notes = document.getElementById('notes').value;
         const now = new Date();
@@ -734,27 +734,55 @@
         if (notes.trim().length > 0) message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
         message += `\n🔁 Relatório gerado via Smash Contagem`;
 
-        // Se houver fotos e o navegador suportar Web Share com arquivos
+        // Verifica se é dispositivo móvel (onde o esquema whatsapp:// funciona)
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Se houver fotos e o navegador suportar Web Share com arquivos (melhor experiência)
         if(attachedPhotos.length > 0 && navigator.share && navigator.canShare) {
             const imageFiles = attachedPhotos.map(p => p.file);
             const shareData = { text: message, files: imageFiles };
             if(navigator.canShare(shareData)) {
                 try {
                     await navigator.share(shareData);
-                    // opcional: limpar fotos após envio bem-sucedido
+                    // Limpa as fotos após envio bem-sucedido
                     attachedPhotos = [];
                     updatePhotoPreview();
                     return;
                 } catch(err) {
                     console.warn("Erro na partilha:", err);
+                    // Se o usuário cancelar, não fazemos nada. Se falhar, continua para o fallback.
                 }
             }
         }
-        // Fallback: enviar apenas texto e instrução sobre fotos
+        
+        // Fallback: preparar mensagem com instruções para fotos (se houver)
+        let finalMessage = message;
         if(attachedPhotos.length > 0) {
-            message += `\n\n*❗ Atenção:* Foram selecionadas ${attachedPhotos.length} foto(s) para este relatório. Por favor, anexe-as manualmente ao enviar esta mensagem.`;
+            finalMessage += `\n\n*❗ Atenção:* Foram selecionadas ${attachedPhotos.length} foto(s) para este relatório. Por favor, anexe-as manualmente ao enviar esta mensagem.`;
         }
-        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        
+        const encodedMessage = encodeURIComponent(finalMessage);
+        
+        // Tenta abrir diretamente o aplicativo WhatsApp se for dispositivo móvel
+        if (isMobile) {
+            // Usa o esquema whatsapp:// para abrir o app nativo
+            const whatsappAppUrl = `whatsapp://send?text=${encodedMessage}`;
+            window.location.href = whatsappAppUrl;
+            
+            // Fallback para navegadores que bloqueiam o redirecionamento ou se o app não estiver instalado
+            setTimeout(() => {
+                // Se após 2 segundos a página ainda estiver aqui, oferece alternativa via web
+                if (document.hasFocus()) {
+                    const usarWeb = confirm("O WhatsApp não foi aberto automaticamente. Deseja usar o WhatsApp Web?");
+                    if (usarWeb) {
+                        window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+                    }
+                }
+            }, 2000);
+        } else {
+            // Em desktop, usa o WhatsApp Web
+            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+        }
     };
 
     // Inicialização
