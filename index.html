@@ -53,6 +53,11 @@
         html { scroll-behavior: smooth; }
         .brand-font { font-family: 'Bangers', cursive; letter-spacing: 2px; text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
         
+        /* Espaçamento seguro para a barra de navegação virtual (Android/iOS) */
+        .pb-safe {
+            padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+        }
+        
         /* ========= PRELOADER ========= */
         #preloader {
             position: fixed;
@@ -287,7 +292,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen pb-52 antialiased">
+<body class="min-h-screen pb-64 antialiased">
 
 <!-- PRELOADER -->
 <div id="preloader">
@@ -356,8 +361,8 @@
     </div>
 </main>
 
-<!-- MÓDULO DE FOTOS + BOTÃO ENVIAR (com opção minimizar adicionada) -->
-<div class="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-40" style="background: var(--footer-gradient);">
+<!-- MÓDULO DE FOTOS + BOTÃO ENVIAR (com opção minimizar e espaçamento seguro) -->
+<div class="fixed bottom-0 left-0 w-full pt-4 px-4 pb-safe bg-gradient-to-t from-black via-black/95 to-transparent z-40" style="background: var(--footer-gradient);">
     <div class="max-w-xl mx-auto">
         <!-- Área de fotos anexadas - agora com ID e controle de minimizar -->
         <div id="fotosModuleContainer" class="mb-3 rounded-2xl p-3 card-glass border border-yellow-500/30">
@@ -712,7 +717,7 @@
         };
     }
 
-    // =========== FUNÇÃO ENVIAR WHATSAPP - MODIFICADA PARA CHAMAR O APP DIRETAMENTE ===========
+    // =========== FUNÇÃO ENVIAR WHATSAPP - MODIFICADA: remove popup de confirmação ===========
     window.sendToWhatsApp = async function() {
         const notes = document.getElementById('notes').value;
         const now = new Date();
@@ -734,9 +739,6 @@
         if (notes.trim().length > 0) message += `\n📌 *NOTAS DO OPERADOR:*\n${notes.trim()}\n`;
         message += `\n🔁 Relatório gerado via Smash Contagem`;
 
-        // Verifica se é dispositivo móvel (onde o esquema whatsapp:// funciona)
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
         // Se houver fotos e o navegador suportar Web Share com arquivos (melhor experiência)
         if(attachedPhotos.length > 0 && navigator.share && navigator.canShare) {
             const imageFiles = attachedPhotos.map(p => p.file);
@@ -763,22 +765,13 @@
         
         const encodedMessage = encodeURIComponent(finalMessage);
         
-        // Tenta abrir diretamente o aplicativo WhatsApp se for dispositivo móvel
+        // Verifica se é dispositivo móvel (onde o esquema whatsapp:// funciona)
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
         if (isMobile) {
-            // Usa o esquema whatsapp:// para abrir o app nativo
-            const whatsappAppUrl = `whatsapp://send?text=${encodedMessage}`;
-            window.location.href = whatsappAppUrl;
-            
-            // Fallback para navegadores que bloqueiam o redirecionamento ou se o app não estiver instalado
-            setTimeout(() => {
-                // Se após 2 segundos a página ainda estiver aqui, oferece alternativa via web
-                if (document.hasFocus()) {
-                    const usarWeb = confirm("O WhatsApp não foi aberto automaticamente. Deseja usar o WhatsApp Web?");
-                    if (usarWeb) {
-                        window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
-                    }
-                }
-            }, 2000);
+            // Tenta abrir diretamente o aplicativo WhatsApp nativo
+            window.location.href = `whatsapp://send?text=${encodedMessage}`;
+            // Sem qualquer caixa de diálogo adicional (conforme solicitado)
         } else {
             // Em desktop, usa o WhatsApp Web
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
